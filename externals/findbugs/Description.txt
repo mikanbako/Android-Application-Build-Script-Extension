@@ -1,0 +1,4 @@
+Install findbugs here. FINDBUGS_HOME is this directory.
+
+If you want to install to other directory, modify "findbugs.home" property in
+extension.properties.
