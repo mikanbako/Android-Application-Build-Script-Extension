@@ -1,1 +1,4 @@
-This directory contains external library.
+This directory contains external library for Ant.
+
+* ant-contrib-*.jar for this build script.
+* findbugs-ant.jar for FindBugs.

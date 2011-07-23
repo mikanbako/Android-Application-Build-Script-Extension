@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project>
+<project xmlns:antcontrib="antlib:net.sf.antcontrib">
+    <property name="extended.basedir" location="${basedir}/build" />
 
-<target name="aaa"  description="test target" depends="debug">
-    <echo message="${ant.project.name}"/>
-</target>
+    <property name="config.directory" location="${extended.basedir}/config" />
+    <property name="externals.directory" location="${extended.basedir}/externals" />
+    <property name="subscripts.directory" location="${extended.basedir}/subscripts" />
+
+    <property file="${config.directory}/extension.properties" />
+
+    <antcontrib:if>
+        <istrue value="${findbugs.enable}" />
+        <then>
+            <import file="${subscripts.directory}/findbugs.xml" />
+        </then>
+    </antcontrib:if>
 
 </project>

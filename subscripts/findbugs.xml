@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <!--
+    Properties :
+        findbugs.output : Output format.
+        findbugs.output.filename : Name of report file.
+     -->
+
+    <property name="findbugs.output.directory" location="${basedir}/findbugs" />
+
+    <property name="findbugs.output.filename.exclude.extension"
+            value="report" />
+    <property name="findbugs.output.file.html"
+            location="${findbugs.output.directory}/${findbugs.output.filename.exclude.extension}.html" />
+    <property name="findbugs.exclude.filter"
+            location="${config.directory}/findbugs-exclude-filter.xml" />
+
+    <target name="findbugs" depends="compile"
+            description="Run FindBugs.">
+        <taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" />
+
+        <!-- Set default properties. -->
+        <condition property="findbugs.output" value="html">
+            <not>
+                <isset property="findbugs.output" />
+            </not>
+        </condition>
+        <condition property="findbugs.output.file" value="${findbugs.output.file.html}">
+            <not>
+                <isset property="findbugs.output.filename" />
+            </not>
+        </condition>
+
+        <mkdir dir="${findbugs.output.directory}" />
+
+        <findbugs home="${findbugs.home}"
+                output="${findbugs.output}"
+                outputFile="${findbugs.output.file}"
+                excludeFilter="${findbugs.exclude.filter}"
+                failOnError="true"
+                warningsProperty="findbugs.warning.reported"
+                jvmargs="-Duser.language=en">
+            <sourcePath path="{source.absolute.dir}" />
+            <sourcePath path="${gen.absolute.dir}" />
+            <auxClasspath path="${android.jar}" />
+            <class location="${out.classes.absolute.dir}" />
+        </findbugs>
+
+      <fail message="FindBugs reports warnings." if="${findbugs.warning.reported}" />
+    </target>
+
+    <target name="clean-findbugs-result"
+            description="Clean directory of FindBugs report.">
+        <delete dir="${findbugs.output.directory}" />
+    </target>
+</project>
