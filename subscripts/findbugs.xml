@@ -40,7 +40,7 @@
                 failOnError="true"
                 warningsProperty="findbugs.warning.reported"
                 jvmargs="-Duser.language=en">
-            <sourcePath path="{source.absolute.dir}" />
+            <sourcePath path="${source.absolute.dir}" />
             <sourcePath path="${gen.absolute.dir}" />
             <auxClasspath path="${android.jar}" />
             <class location="${out.classes.absolute.dir}" />
