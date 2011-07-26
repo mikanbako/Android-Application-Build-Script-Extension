@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:antcontrib="antlib:net.sf.antcontrib">
+<project>
     <property name="extended.basedir" location="${basedir}/build" />
 
     <property name="config.directory" location="${extended.basedir}/config" />
@@ -16,11 +16,10 @@
      -->
     <target name="clean-all" depends="clean, -clean-extended" />
 
-    <antcontrib:if>
-        <istrue value="${findbugs.enable}" />
+    <if condition="${findbugs.enable}">
         <then>
             <import file="${subscripts.directory}/findbugs.xml" />
         </then>
-    </antcontrib:if>
+    </if>
 
 </project>
