@@ -49,7 +49,7 @@
       <fail message="FindBugs reports warnings." if="${findbugs.warning.reported}" />
     </target>
 
-    <target name="clean-findbugs-result"
+    <target name="clean-findbugs-result" extensionOf="-clean-extended"
             description="Clean directory of FindBugs report.">
         <delete dir="${findbugs.output.directory}" />
     </target>
