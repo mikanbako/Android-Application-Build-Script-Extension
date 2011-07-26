@@ -8,6 +8,14 @@
 
     <property file="${config.directory}/extension.properties" />
 
+    <extension-point name="-clean-extended" />
+
+    <!-- Clean workspace.
+         This target does not have description attribute. Because this target
+         is private from build.xml.
+     -->
+    <target name="clean-all" depends="clean, -clean-extended" />
+
     <antcontrib:if>
         <istrue value="${findbugs.enable}" />
         <then>
