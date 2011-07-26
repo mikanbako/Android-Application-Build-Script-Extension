@@ -2,10 +2,11 @@ Developing...
 
 Required software:
     * Ant 1.8.0 or higher.
+    * Python 2.7.x.
 
 Setup:
     1. Locate this directory at top directory of application project.
-    2. Copy or make symbolic link private-build.sh.
+    2. Copy or make symbolic link from build-start-scripts/private-build.py.
     3. Import extended_build.xml from build.xml after <setup />.
 
 FindBugs Setup:
