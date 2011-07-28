@@ -13,7 +13,8 @@ ANT_LIBRARY_DIRECTORY_PATH = os.path.join('build', 'externals', 'lib')
 
 # Command and arguments for Ant execution.
 ANT_EXEC_COMMAND = 'ant'
-ANT_EXEC_ARGUMENTS = [ANT_EXEC_COMMAND, '-lib', ANT_LIBRARY_DIRECTORY_PATH]
+ANT_EXEC_ARGUMENTS = [ANT_EXEC_COMMAND, '-lib', ANT_LIBRARY_DIRECTORY_PATH,
+        '-Dextended.build=true']
 
 # Targets
 TARGET_CLEAN = 'clean'

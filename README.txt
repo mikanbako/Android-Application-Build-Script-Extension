@@ -5,9 +5,17 @@ Required software:
     * Python 2.7.x.
 
 Setup:
-    1. Locate this directory at top directory of application project.
-    2. Copy or make symbolic link from build-start-scripts/private-build.py.
-    3. Import extended_build.xml from build.xml after <setup />.
+    1. Locate this directory that names "build" at top directory of application
+       project.
+    2. Copy or make symbolic link from build-start-scripts/start-build.py.
+    3. Copy the below and paste to the below of <setup /> at build.xml.
+
+            <if condition="${extended.build}">
+                <then>
+                    <import file="build/extended_build.xml" />
+                </then>
+            </if>
+
 
 FindBugs Setup:
     1. Install FindBugs to externals/findbugs or other directory.
