@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <property name="test.result.directory"
+            location="${basedir}/result_testing" />
+    <property name="test.result.output"
+            location="${test.result.directory}/result.txt" />
+    <property name="coverage.directory"
+            location="${test.project.directory}/coverage" />
+    <property name="validation.script.for.text"
+            location="${subscripts.directory}/validate_test_text_result.py" />
+
+    <target name="run-tests-and-judge"
+            description="Run tests and jundge whether the test succeeded.">
+        <mkdir dir="${test.result.directory}"/>
+        <ant target="run-tests" dir="${test.project.directory}"
+                inheritall="false" output="${test.result.output}">
+            <property name="test.runner" value="${test.runner}" />
+        </ant>
+        <exec executable="python" failonerror="true">
+            <arg path="${validation.script.for.text}" />
+            <arg path="${test.result.output}" />
+        </exec>
+    </target>
+
+    <target name="coverage" description="Run tests and generate coverage report.">
+        <mkdir dir="${test.result.directory}"/>
+        <exec executable="ant" dir="${test.project.directory}"
+                failonerror="true" searchpath="true">
+            <arg value="-Dtest.runner=${test.runner}" />
+            <arg value="coverage" />
+            <redirector output="${test.result.output}" alwayslog="true" />
+        </exec>
+    </target>
+
+    <target name="clean-test-related" extensionOf="-clean-extended"
+            description="Clean test related result.">
+        <delete dir="${test.result.directory}" />
+        <delete dir="${coverage.directory}" />
+        <ant target="clean" dir="${test.project.directory}" inheritall="false" />
+    </target>
+</project>

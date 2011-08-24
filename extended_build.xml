@@ -22,6 +22,12 @@
         </then>
     </if>
 
+    <if condition="${test.enable}">
+        <then>
+            <import file="${subscripts.directory}/run-tests.xml" />
+        </then>
+    </if>
+
     <!-- Run FindBugs if findbugs.enalbe is set. -->
     <target name="-findbugs-if-enabled" if="${findbugs.enable}">
         <antcall target="findbugs" />
