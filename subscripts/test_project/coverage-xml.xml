@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <property name="instrumentation.for.xml.absolute.dir"
+            location="${basedir}/instrumented_for_xml" />
+    <property name="coverage.xml.output"
+            location="${results.directory}/coverage.xml" />
+
+    <target name="coverage-xml" description="Run tests and generate XML coverage report."
+            depends="-set-coverage-classpath, -install-instrumented">
+        <move file="${user.dir}/coverage.em" todir="${basedir}" />
+        <copy file="coverage.em" tofile="coverage-xml.em" />
+        <copy todir="${instrumentation.for.xml.absolute.dir}">
+            <fileset dir="${instrumentation.absolute.dir}" />
+        </copy>
+        <antcall target="coverage" />
+        <exec executable="${adb}" failonerror="true">
+            <arg line="${adb.device.arg}" />
+            <arg value="pull" />
+            <arg value="${emma.dump.file}" />
+            <arg value="${basedir}/coverage-xml.ec" />
+        </exec>
+        <mkdir dir="${results.directory}" />
+        <echo message="Move coverage report to ${results.directory}." />
+        <move file="${tested.project.absolute.dir}/coverage"
+            todir="${results.directory}" />
+        <emma>
+            <report sourcepath="${tested.project.absolute.dir}/${source.dir}"
+                    verbosity="${verbosity}">
+                <infileset dir="${basedir}">
+                    <include name="coverage-xml.ec" />
+                    <include name="coverage-xml.em" />
+                </infileset>
+                <xml outfile="${coverage.xml.output}" />
+           </report>
+        </emma>
+        <delete dir="${instrumentation.for.xml.absolute.dir}" />
+        <delete file="coverage-xml.ec" />
+        <delete file="${user.dir}/coverage.em" />
+        <delete file="coverage-xml.em" />
+    </target>
+</project>
