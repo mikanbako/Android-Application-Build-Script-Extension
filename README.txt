@@ -22,3 +22,16 @@ FindBugs Setup:
     2. Locate findbugs-ant.jar to externals/lib or library directory of Ant.
     3. Turn true findbugs.enable in config/extension.properties.
     4. Modify findbugs.home to directory installed FindBugs if you need.
+
+Test Setup:
+    1. Copy the below and paste to the below of <setup /> at build.xml in the
+       test project.
+
+            <if condition="${extended.build}">
+                <then>
+                    <import file="${basedir}/../build/extended_test_build.xml" />
+                </then>
+            </if>
+
+    2. Turn true test.enable in config/extension.properties.
+

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <property name="test.result.output"
+            location="${results.directory}/test_result.txt" />
+    <property name="coverage.log.output"
+            location="${results.directory}/log_coverage.txt" />
+    <property name="coverage.directory.in.test.project"
+            location="${test.project.directory}/coverage" />
+    <property name="coverage.output.directory"
+            location="${results.directory}" />
+    <property name="validation.script.for.text"
+            location="${subscripts.directory}/validate_test_text_result.py" />
+
+    <target name="run-tests-and-judge"
+            description="Run tests and jundge whether the test succeeded.">
+        <local name="test.result.directory" />
+        <dirname file="${test.result.output}" property="test.result.directory" />
+        <mkdir dir="${test.result.directory}"/>
+
+        <ant target="run-tests" dir="${test.project.directory}"
+                inheritall="false" output="${test.result.output}">
+            <property name="test.runner" value="${test.runner}" />
+        </ant>
+        <exec executable="python" failonerror="true">
+            <arg path="${validation.script.for.text}" />
+            <arg path="${test.result.output}" />
+        </exec>
+    </target>
+
+    <target name="coverage" description="Run tests and generate coverage report.">
+        <local name="coverage.log.output.directory" />
+        <dirname file="${coverage.log.output}" property="coverage.log.output.directory" />
+        <mkdir dir="${coverage.log.output.directory}" />
+        <mkdir dir="${coverage.output.directory}" />
+
+        <exec executable="ant" dir="${test.project.directory}"
+                failonerror="true" searchpath="true">
+            <arg value="-Dtest.runner=${test.runner}" />
+            <arg value="coverage" />
+            <redirector output="${coverage.log.output}" alwayslog="true" />
+        </exec>
+        <echo message="Move coverage report to ${coverage.output.directory}." />
+        <move file="${coverage.directory.in.test.project}" todir="${coverage.output.directory}" />
+    </target>
+
+    <target name="coverage-xml" description="Run tests and generate XML coverage report."
+            depends="coverage">
+        <ant target="coverage-xml" dir="${test.project.directory}"
+                inheritall="false">
+            <property name="test.runner" value="${test.runner}" />
+            <property name="extended.build" value="true" />
+            <property name="test.enable" value="true" />
+            <property name="subscripts.test.project.directory"
+                location="${subscripts.test.project.directory}" />
+            <property name="results.directory" location="${results.directory}" />
+        </ant>
+    </target>
+</project>

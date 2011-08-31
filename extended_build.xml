@@ -5,6 +5,9 @@
     <property name="config.directory" location="${extended.basedir}/config" />
     <property name="externals.directory" location="${extended.basedir}/externals" />
     <property name="subscripts.directory" location="${extended.basedir}/subscripts" />
+    <property name="subscripts.test.project.directory"
+            location="${subscripts.directory}/test_project" />
+    <property name="results.directory" location="${basedir}/results" />
 
     <property file="${config.directory}/extension.properties" />
 
@@ -19,6 +22,12 @@
     <if condition="${findbugs.enable}">
         <then>
             <import file="${subscripts.directory}/findbugs.xml" />
+        </then>
+    </if>
+
+    <if condition="${test.enable}">
+        <then>
+            <import file="${subscripts.directory}/run-tests.xml" />
         </then>
     </if>
 
