@@ -11,13 +11,13 @@
 
     <property file="${config.directory}/extension.properties" />
 
-    <extension-point name="-clean-extended" />
-
     <!-- Clean workspace.
          This target does not have description attribute. Because this target
          is private from build.xml.
      -->
-    <target name="clean-all" depends="clean, -clean-extended" />
+    <target name="clean-all" depends="clean">
+        <delete dir="${results.directory}" />
+    </target>
 
     <if condition="${findbugs.enable}">
         <then>

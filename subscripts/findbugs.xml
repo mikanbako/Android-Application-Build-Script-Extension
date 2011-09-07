@@ -6,10 +6,10 @@
         findbugs.output.filename : Name of report file.
      -->
 
-    <property name="findbugs.output.directory" location="${basedir}/findbugs" />
+    <property name="findbugs.output.directory" location="${results.directory}" />
 
     <property name="findbugs.output.filename.exclude.extension"
-            value="report" />
+            value="findbugs" />
     <property name="findbugs.output.file.html"
             location="${findbugs.output.directory}/${findbugs.output.filename.exclude.extension}.html" />
     <property name="findbugs.exclude.filter"
@@ -47,10 +47,5 @@
         </findbugs>
 
       <fail message="FindBugs reports warnings." if="${findbugs.warning.reported}" />
-    </target>
-
-    <target name="clean-findbugs-result" extensionOf="-clean-extended"
-            description="Clean directory of FindBugs report.">
-        <delete dir="${findbugs.output.directory}" />
     </target>
 </project>
