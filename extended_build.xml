@@ -16,6 +16,7 @@
          is private from build.xml.
      -->
     <target name="clean-all" depends="clean">
+        <antcall target="-clean-tests-if-enabled" />
         <delete dir="${results.directory}" />
     </target>
 
@@ -28,8 +29,15 @@
     <if condition="${test.enable}">
         <then>
             <import file="${subscripts.directory}/run-tests.xml" />
+            <property name="test.project.directory"
+                    location="${basedir}/${test.project.directory}" />
         </then>
     </if>
+
+    <target name="-clean-tests-if-enabled" if="${test.enable}">
+        <ant dir="${test.project.directory}" target="clean"
+                inheritAll="false" />
+    </target>
 
     <!-- Run FindBugs if findbugs.enalbe is set. -->
     <target name="-findbugs-if-enabled" if="${findbugs.enable}">
