@@ -6,7 +6,7 @@
         findbugs.output.filename : Name of report file.
      -->
 
-    <property name="findbugs.output.directory" location="${results.directory}" />
+    <property name="findbugs.output.directory" location="${reports.directory}" />
 
     <property name="findbugs.output.filename.exclude.extension"
             value="findbugs" />

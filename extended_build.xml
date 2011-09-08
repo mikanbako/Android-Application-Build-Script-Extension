@@ -7,7 +7,7 @@
     <property name="subscripts.directory" location="${extended.basedir}/subscripts" />
     <property name="subscripts.test.project.directory"
             location="${subscripts.directory}/test_project" />
-    <property name="results.directory" location="${basedir}/results" />
+    <property name="reports.directory" location="${basedir}/reports" />
 
     <property file="${config.directory}/extension.properties" />
 
@@ -17,7 +17,7 @@
      -->
     <target name="clean-all" depends="clean">
         <antcall target="-clean-tests-if-enabled" />
-        <delete dir="${results.directory}" />
+        <delete dir="${reports.directory}" />
     </target>
 
     <if condition="${findbugs.enable}">

@@ -3,7 +3,7 @@
     <property name="instrumentation.for.xml.absolute.dir"
             location="${basedir}/instrumented_for_xml" />
     <property name="coverage.xml.output"
-            location="${results.directory}/coverage.xml" />
+            location="${reports.directory}/coverage.xml" />
 
     <target name="coverage-xml" description="Run tests and generate XML coverage report."
             depends="-set-coverage-classpath, -install-instrumented">
@@ -19,10 +19,10 @@
             <arg value="${emma.dump.file}" />
             <arg value="${basedir}/coverage-xml.ec" />
         </exec>
-        <mkdir dir="${results.directory}" />
-        <echo message="Move coverage report to ${results.directory}." />
+        <mkdir dir="${reports.directory}" />
+        <echo message="Move coverage report to ${reports.directory}." />
         <move file="${tested.project.absolute.dir}/coverage"
-            todir="${results.directory}" />
+            todir="${reports.directory}" />
         <emma>
             <report sourcepath="${tested.project.absolute.dir}/${source.dir}"
                     verbosity="${verbosity}">

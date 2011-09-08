@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
     <property name="test.result.output"
-            location="${results.directory}/test_result.txt" />
+            location="${reports.directory}/test_result.txt" />
     <property name="coverage.log.output"
-            location="${results.directory}/log_coverage.txt" />
+            location="${reports.directory}/log_coverage.txt" />
     <property name="coverage.directory.in.test.project"
             location="${test.project.directory}/coverage" />
     <property name="coverage.output.directory"
-            location="${results.directory}" />
+            location="${reports.directory}" />
     <property name="validation.script.for.text"
             location="${subscripts.directory}/validate_test_text_result.py" />
 
@@ -52,7 +52,7 @@
             <property name="test.enable" value="true" />
             <property name="subscripts.test.project.directory"
                 location="${subscripts.test.project.directory}" />
-            <property name="results.directory" location="${results.directory}" />
+            <property name="reports.directory" location="${reports.directory}" />
         </ant>
     </target>
 </project>
