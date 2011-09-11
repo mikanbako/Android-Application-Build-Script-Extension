@@ -45,7 +45,5 @@
             <auxClasspath path="${android.jar}" />
             <class location="${out.classes.absolute.dir}" />
         </findbugs>
-
-      <fail message="FindBugs reports warnings." if="${findbugs.warning.reported}" />
     </target>
 </project>
