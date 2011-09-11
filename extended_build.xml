@@ -38,18 +38,4 @@
         <ant dir="${test.project.directory}" target="clean"
                 inheritAll="false" />
     </target>
-
-    <!-- Run FindBugs if findbugs.enalbe is set. -->
-    <target name="-findbugs-if-enabled" if="${findbugs.enable}">
-        <antcall target="findbugs" />
-    </target>
-
-    <!-- Run private build. -->
-    <target name="private-build" depends="-findbugs-if-enabled, debug"
-            description="Run private build." />
-
-    <!-- Run private build after clean-all. -->
-    <target name="private-build-after-clean" depends="clean-all, private-build"
-            description="Run clean-all and private-build " />
-
 </project>
