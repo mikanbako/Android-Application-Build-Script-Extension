@@ -43,8 +43,7 @@
         <move file="${coverage.directory.in.test.project}" todir="${coverage.output.directory}" />
     </target>
 
-    <target name="coverage-xml" description="Run tests and generate XML coverage report."
-            depends="coverage">
+    <target name="coverage-xml" description="Run tests and generate XML coverage report.">
         <ant target="coverage-xml" dir="${test.project.directory}"
                 inheritall="false">
             <property name="test.runner" value="${test.runner}" />
