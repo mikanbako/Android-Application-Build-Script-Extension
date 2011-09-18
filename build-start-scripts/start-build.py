@@ -3,6 +3,7 @@
 import argparse
 import os
 import os.path
+import re
 
 # Script for private build.
 #
@@ -34,13 +35,27 @@ def print_project_help():
     ''' Print project help. '''
     os.execvp(ANT_EXEC_COMMAND, ANT_EXEC_ARGUMENTS + ['-p'])
 
-def run_targets(targets):
+def run_targets(ant_properties, targets):
     ''' Run targets. '''
-    os.execvp(ANT_EXEC_COMMAND, ANT_EXEC_ARGUMENTS + targets)
+    os.execvp(ANT_EXEC_COMMAND, ANT_EXEC_ARGUMENTS + ant_properties + targets)
+
+class PropertyAction(argparse.Action):
+    ''' Action of ArgumentParser for Ant property. '''
+
+    PROPERTY_PATTERN = re.compile(ur'^(?P<name>[^=]+)=(?P<value>.*)$')
+
+    def __call__(self, parser, namespace, values, option_string):
+        property_arguments = getattr(namespace, self.dest)
+        if not property_arguments:
+            property_arguments = []
+        property_arguments.append('-D' + values[0])
+        setattr(namespace, self.dest, property_arguments)
 
 def main():
     parser = argparse.ArgumentParser(
             description='Run private build.', add_help=False)
+    parser.add_argument('-D', action=PropertyAction, nargs=1,
+            help="Property of Ant. -D<name>=<value>.")
     parser.add_argument('--help', '-h', action='store_true',
             default=False, help='Print targets')
     parser.add_argument('target', nargs='*', help='Running targets.')
@@ -48,12 +63,17 @@ def main():
     arguments = parser.parse_args()
     rewrite_targets(arguments.target)
 
+    if arguments.D:
+        ant_properties = arguments.D
+    else:
+        ant_properties = []
+
     if arguments.help or (TARGET_HELP in arguments.target):
         print_project_help()
     elif not arguments.target:
-        run_targets(DEFAULT_TARGETS)
+        run_targets(ant_properties, DEFAULT_TARGETS)
     else:
-        run_targets(arguments.target)
+        run_targets(ant_properties, arguments.target)
 
 if __name__ == '__main__':
     main()

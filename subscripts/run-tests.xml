@@ -20,6 +20,7 @@
         <ant target="run-tests" dir="${test.project.directory}"
                 inheritall="false" output="${test.result.output}">
             <property name="test.runner" value="${test.runner}" />
+            <property name="adb.device.arg" value="${adb.device.arg}" />
         </ant>
         <exec executable="python" failonerror="true">
             <arg path="${validation.script.for.text}" />
@@ -36,6 +37,7 @@
         <exec executable="ant" dir="${test.project.directory}"
                 failonerror="true" searchpath="true">
             <arg value="-Dtest.runner=${test.runner}" />
+            <arg value="-Dadb.device.arg=${adb.device.arg}" />
             <arg value="coverage" />
             <redirector output="${coverage.log.output}" alwayslog="true" />
         </exec>
@@ -50,6 +52,7 @@
             <property name="test.runner" value="${test.runner}" />
             <property name="extended.build" value="true" />
             <property name="test.enable" value="true" />
+            <property name="adb.device.arg" value="${adb.device.arg}" />
             <property name="subscripts.test.project.directory"
                 location="${subscripts.test.project.directory}" />
             <property name="reports.directory" location="${reports.directory}" />
