@@ -4,7 +4,7 @@ import argparse
 import os
 import os.path
 
-# Script for private build.
+# Script for build.
 #
 # To print this usage with --help or -h option.
 
@@ -20,10 +20,9 @@ ANT_EXEC_ARGUMENTS = [ANT_EXEC_COMMAND, '-lib', ANT_LIBRARY_DIRECTORY_PATH,
 TARGET_CLEAN = 'clean'
 TARGET_CLEAN_ALL = 'clean-all'
 TARGET_HELP = 'help'
-TARGET_PRIVATE_BUILD = 'private-build'
 
 # Default targets.
-DEFAULT_TARGETS = [TARGET_PRIVATE_BUILD]
+DEFAULT_TARGETS = [TARGET_HELP]
 
 def rewrite_targets(targets):
     ''' Rewrite element of arguments to target of build script. '''
@@ -40,7 +39,7 @@ def run_targets(targets):
 
 def main():
     parser = argparse.ArgumentParser(
-            description='Run private build.', add_help=False)
+            description='Run build.', add_help=False)
     parser.add_argument('--help', '-h', action='store_true',
             default=False, help='Print targets')
     parser.add_argument('target', nargs='*', help='Running targets.')
