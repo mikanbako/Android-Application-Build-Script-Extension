@@ -29,7 +29,7 @@ Test Setup:
 
             <if condition="${extended.build}">
                 <then>
-                    <import file="${basedir}/../build/extended_test_build.xml" />
+                    <import file="${tested.project.dir}/build/extended_test_build.xml" />
                 </then>
             </if>
 
