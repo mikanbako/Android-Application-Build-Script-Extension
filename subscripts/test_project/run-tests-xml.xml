@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <property name="test.result.xml.output"
+            location="${reports.directory}/test_result.xml" />
+    <property name="run.tests.for.xml.script"
+            location="${subscripts.test.project.directory}/run_tests_for_xml.py" />
+    <property name="classpath.for.jython.scripts"
+            value="${sdk.dir}/tools/lib/ddmlib.jar" />
+    <property name="adb.path"
+            location="${sdk.dir}/platform-tools/adb" />
+
+    <target name="run-tests-xml" depends="-install-tested-project, install">
+        <echo message="Test ${test.runner} on ${manifest.package}." />
+        <exec executable="jython" failonerror="true">
+            <env key="CLASSPATH" path="${classpath.for.jython.scripts}" />
+            <arg path="${run.tests.for.xml.script}" />
+            <arg value="-a" />
+            <arg path="${adb.path}" />
+            <arg value="-s" />
+            <arg value="${adb.device.arg}" />
+            <arg value="-o" />
+            <arg value="${test.result.xml.output}" />
+            <arg value="${manifest.package}" />
+            <arg value="${test.runner}" />
+        </exec>
+        <echo message="XML of test result is outputted to ${test.result.xml.output}" />
+    </target>
+</project>

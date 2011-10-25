@@ -3,6 +3,7 @@ Developing...
 Required software:
     * Ant 1.8.0 or higher.
     * Python 2.7.x.
+    * Jython 2.5.x.
 
 Setup:
     1. Locate this directory that names "build" at top directory of application

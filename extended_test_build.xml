@@ -3,6 +3,7 @@
     <if condition="${test.enable}">
         <then>
             <import file="${subscripts.test.project.directory}/coverage-xml.xml" />
+            <import file="${subscripts.test.project.directory}/run-tests-xml.xml" />
         </then>
     </if>
 </project>
