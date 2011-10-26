@@ -8,6 +8,7 @@
     <property name="subscripts.test.project.directory"
             location="${subscripts.directory}/test_project" />
     <property name="reports.directory" location="${basedir}/reports" />
+    <property name="python.executable" value="python" />
 
     <property file="${config.directory}/extension.properties" />
 
