@@ -22,7 +22,7 @@
             <property name="test.runner" value="${test.runner}" />
             <property name="adb.device.arg" value="${adb.device.arg}" />
         </ant>
-        <exec executable="python" failonerror="true">
+        <exec executable="${python.executable}" failonerror="true">
             <arg path="${validation.script.for.text}" />
             <arg path="${test.result.text.output}" />
         </exec>
