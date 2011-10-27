@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
-    <property name="test.result.output"
+    <property name="test.result.text.output"
             location="${reports.directory}/test_result.txt" />
     <property name="coverage.log.output"
             location="${reports.directory}/log_coverage.txt" />
@@ -11,21 +11,37 @@
     <property name="validation.script.for.text"
             location="${subscripts.directory}/validate_test_text_result.py" />
 
-    <target name="run-tests-and-judge"
-            description="Run tests and jundge whether the test succeeded.">
-        <local name="test.result.directory" />
-        <dirname file="${test.result.output}" property="test.result.directory" />
-        <mkdir dir="${test.result.directory}"/>
+    <target name="-make-test-result-directory">
+        <mkdir dir="${reports.directory}"/>
+    </target>
 
+    <target name="run-tests-and-judge" depends="-make-test-result-directory"
+            description="Run tests and jundge whether the test succeeded.">
         <ant target="run-tests" dir="${test.project.directory}"
-                inheritall="false" output="${test.result.output}">
+                inheritall="false" output="${test.result.text.output}">
+            <property name="sdk.dir" location="${sdk.dir}" />
             <property name="test.runner" value="${test.runner}" />
             <property name="adb.device.arg" value="${adb.device.arg}" />
         </ant>
-        <exec executable="python" failonerror="true">
+        <exec executable="${python.executable}" failonerror="true">
             <arg path="${validation.script.for.text}" />
-            <arg path="${test.result.output}" />
+            <arg path="${test.result.text.output}" />
         </exec>
+    </target>
+
+    <target name="run-tests-xml" depends="-make-test-result-directory"
+            description="Run tests and output result as XML.">
+        <ant target="run-tests-xml" dir="${test.project.directory}"
+                inheritall="false">
+            <property name="sdk.dir" location="${sdk.dir}" />
+            <property name="test.runner" value="${test.runner}" />
+            <property name="extended.build" value="true" />
+            <property name="test.enable" value="true" />
+            <property name="adb.device.arg" value="${adb.device.arg}" />
+            <property name="subscripts.test.project.directory"
+                location="${subscripts.test.project.directory}" />
+            <property name="reports.directory" location="${reports.directory}" />
+        </ant>
     </target>
 
     <target name="coverage" description="Run tests and generate coverage report.">
@@ -36,6 +52,7 @@
 
         <exec executable="ant" dir="${test.project.directory}"
                 failonerror="true" searchpath="true">
+            <arg value="-Dsdk.dir=${sdk.dir}" />
             <arg value="-Dtest.runner=${test.runner}" />
             <arg value="-Dadb.device.arg=${adb.device.arg}" />
             <arg value="coverage" />
@@ -48,6 +65,7 @@
     <target name="coverage-xml" description="Run tests and generate XML coverage report.">
         <ant target="coverage-xml" dir="${test.project.directory}"
                 inheritall="false">
+            <property name="sdk.dir" location="${sdk.dir}" />
             <property name="test.runner" value="${test.runner}" />
             <property name="extended.build" value="true" />
             <property name="test.enable" value="true" />
