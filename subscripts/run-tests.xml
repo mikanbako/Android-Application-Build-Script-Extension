@@ -19,6 +19,7 @@
             description="Run tests and jundge whether the test succeeded.">
         <ant target="run-tests" dir="${test.project.directory}"
                 inheritall="false" output="${test.result.text.output}">
+            <property name="sdk.dir" location="${sdk.dir}" />
             <property name="test.runner" value="${test.runner}" />
             <property name="adb.device.arg" value="${adb.device.arg}" />
         </ant>
@@ -51,6 +52,7 @@
 
         <exec executable="ant" dir="${test.project.directory}"
                 failonerror="true" searchpath="true">
+            <arg value="-Dsdk.dir=${sdk.dir}" />
             <arg value="-Dtest.runner=${test.runner}" />
             <arg value="-Dadb.device.arg=${adb.device.arg}" />
             <arg value="coverage" />
