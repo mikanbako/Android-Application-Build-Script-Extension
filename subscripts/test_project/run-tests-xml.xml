@@ -16,8 +16,7 @@
             <arg path="${run.tests.for.xml.script}" />
             <arg value="-a" />
             <arg path="${adb.path}" />
-            <arg value="-s" />
-            <arg value="${adb.device.arg}" />
+            <arg line="${adb.device.arg}" />
             <arg value="-o" />
             <arg value="${test.result.xml.output}" />
             <arg value="${manifest.package}" />
