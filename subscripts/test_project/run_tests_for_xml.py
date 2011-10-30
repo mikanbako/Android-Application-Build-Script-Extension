@@ -23,6 +23,9 @@ from com.android.ddmlib import AndroidDebugBridge
 from com.android.ddmlib.testrunner import RemoteAndroidTestRunner
 from com.android.ddmlib.testrunner import ITestRunListener
 
+# Pattern that represents option of serial number of device.
+PATTERN_SERIAL_NUMBER_OPTION = re.compile(ur'-s\s+(?P<serial_number>[^-]\S+)')
+
 # Encoding of outputted XML.
 XML_ENCODING = u'UTF-8'
 
@@ -31,6 +34,21 @@ PATTERN_XML_INSERTING_NEW_LINE = re.compile(ur'(?<=>)<(?=[^?/])')
 
 # Replacement to insert new line for outputted XML.
 REPLACEMENT_XML_INSERTING_NEW_LINE = u'\n\g<0>'
+
+def get_serial_number(adb_device_arg):
+    u'''
+    Get serial number from adb.device.arg.
+
+    Parameters:
+        adb_device_arg : Arguments for adb.
+    Return:
+        Serial number. None if adb.device.arg does not contain serial number.
+    '''
+    match = PATTERN_SERIAL_NUMBER_OPTION.search(adb_device_arg)
+    if match:
+        return match.group(u'serial_number')
+    else:
+        return None
 
 def get_device(serial_number, debug_bridge):
     u'''
@@ -234,8 +252,10 @@ def main():
     parser = OptionParser(usage=u'usage: %prog -a ADB -s SERIAL [--coverage] [-o FILE] test_package_name [test_runner]')
     parser.add_option('-a', '--adb', metavar='ADB', dest='adb_location',
         help='Location of adb. (required)')
+    parser.add_option('-b', '--adbdevicearg', metavar='ARG', dest='adb_device_arg',
+        help='Arguments for adb. This option for build script by Ant.')
     parser.add_option('-s', '--serial', metavar='SERIAL', dest='serial_number',
-        help='Serial number of the device (required). If no serial number, this script will use first device of list.')
+        help='Serial number of the device. If no serial number, this script will use first device of list.')
     parser.add_option('--coverage', action='store_true', dest='coverage',
         default=False, help='Measure coverage while tests are running.')
     parser.add_option('-o', '--output', metavar='FILE', dest='output',
@@ -256,6 +276,12 @@ def main():
     else:
         parser.print_help()
         sys.exit(1)
+
+    serial_number = None
+    if options.serial_number:
+        serial_number = options.serial_number
+    elif options.adb_device_arg:
+        serial_number = get_serial_number(options.adb_device_arg)
 
     output_file_name = options.output
     if output_file_name:
