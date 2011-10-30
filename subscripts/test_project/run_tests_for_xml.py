@@ -49,8 +49,11 @@ def get_device(serial_number, debug_bridge):
         return None
 
     if serial_number:
-        return [device for device in devices
-            if device.getSerialNumber() == serial_number][0]
+        for d in devices:
+            if d.getSerialNumber() == serial_number:
+                return d
+        else:
+            return None
     else:
         return devices[0]
 
