@@ -293,7 +293,7 @@ def main():
     else:
         output_file = sys.stdout
 
-    result = run_tests(options.adb_location, options.serial_number,
+    result = run_tests(options.adb_location, serial_number,
         package_name, test_runner, options.coverage)
     if result:
         output_result(result, output_file)
