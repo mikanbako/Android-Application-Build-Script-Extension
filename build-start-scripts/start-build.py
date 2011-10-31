@@ -22,9 +22,6 @@ TARGET_CLEAN = 'clean'
 TARGET_CLEAN_ALL = 'clean-all'
 TARGET_HELP = 'help'
 
-# Default targets.
-DEFAULT_TARGETS = [TARGET_HELP]
-
 def rewrite_targets(targets):
     ''' Rewrite element of arguments to target of build script. '''
     if TARGET_CLEAN in targets:
@@ -70,7 +67,7 @@ def main():
     if arguments.help or (TARGET_HELP in arguments.target):
         print_project_help()
     elif not arguments.target:
-        run_targets(ant_properties, DEFAULT_TARGETS)
+        print_project_help()
     else:
         run_targets(ant_properties, arguments.target)
 
