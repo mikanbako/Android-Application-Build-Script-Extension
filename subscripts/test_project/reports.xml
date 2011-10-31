@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <property name="test.result.xml.output"
+            location="${reports.directory}/test_result.xml" />
+    <property name="run.tests.for.xml.script"
+            location="${subscripts.test.project.directory}/run_tests_for_xml.py" />
+    <property name="classpath.for.jython.scripts"
+            value="${sdk.dir}/tools/lib/ddmlib.jar" />
+    <property name="coverage.xml.output"
+            location="${reports.directory}/coverage.xml" />
+    <property name="coverage.html.output"
+            location="${reports.directory}/coverage.html" />
+
+    <target name="run-tests-xml" depends="-install-tested-project, install">
+        <mkdir dir="${reports.directory}" />
+
+        <echo message="Test ${test.runner} on ${manifest.package}." />
+        <exec executable="jython" failonerror="true">
+            <env key="CLASSPATH" path="${classpath.for.jython.scripts}" />
+            <arg path="${run.tests.for.xml.script}" />
+            <arg value="-a" />
+            <arg path="${adb}" />
+            <arg value="-b" />
+            <arg value="${adb.device.arg}" />
+            <arg value="-o" />
+            <arg value="${test.result.xml.output}" />
+            <arg value="${manifest.package}" />
+            <arg value="${test.runner}" />
+        </exec>
+        <echo message="XML of test result is outputted to ${test.result.xml.output}" />
+    </target>
+
+    <target name="coverage-reports"
+            depends="-set-coverage-classpath, -install-instrumented, install">
+        <mkdir dir="${reports.directory}" />
+        <move file="${user.dir}/coverage.em" todir="${basedir}" />
+
+        <echo message="Run tests and measure coverage about ${test.runner} on ${manifest.package}." />
+        <exec executable="jython" failonerror="true">
+            <env key="CLASSPATH" path="${classpath.for.jython.scripts}" />
+            <arg path="${run.tests.for.xml.script}" />
+            <arg value="-a" />
+            <arg path="${adb}" />
+            <arg value="-b" />
+            <arg value="${adb.device.arg}" />
+            <arg value="-o" />
+            <arg value="${test.result.xml.output}" />
+            <arg value="--coverage" />
+            <arg value="${manifest.package}" />
+            <arg value="${test.runner}" />
+        </exec>
+
+        <exec executable="${adb}" failonerror="true">
+            <arg line="${adb.device.arg}" />
+            <arg value="pull" />
+            <arg value="${emma.dump.file}" />
+            <arg value="${basedir}/coverage.ec" />
+        </exec>
+        <emma>
+            <report sourcepath="${tested.project.absolute.dir}/${source.dir}"
+                    verbosity="${verbosity}">
+                <infileset dir="${basedir}">
+                    <include name="coverage.ec" />
+                    <include name="coverage.em" />
+                </infileset>
+                <xml outfile="${coverage.xml.output}" />
+                <html outfile="${coverage.html.output}" encoding="UTF-8" />
+           </report>
+        </emma>
+        <delete dir="${instrumentation.absolute.dir}" />
+        <delete file="coverage.ec" />
+        <delete file="${user.dir}/coverage.em" />
+        <delete file="coverage.em" />
+    </target>
+</project>

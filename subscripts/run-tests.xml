@@ -32,7 +32,7 @@
     </target>
 
     <target name="run-tests-xml" depends="-make-test-result-directory"
-            description="Run tests and output result as XML.">
+            description="Run tests and generate XML report.">
         <ant target="run-tests-xml" dir="${test.project.directory}"
                 inheritall="false">
             <property name="sdk.dir" location="${sdk.dir}" />
@@ -66,8 +66,9 @@
         <move file="${coverage.directory.in.test.project}" todir="${coverage.output.directory}" />
     </target>
 
-    <target name="coverage-xml" description="Run tests and generate XML coverage report.">
-        <ant target="coverage-xml" dir="${test.project.directory}"
+    <target name="coverage-reports"
+            description="Run tests, measure coverage and generate XML test + XML/HTML coverage reports.">
+        <ant target="coverage-reports" dir="${test.project.directory}"
                 inheritall="false">
             <property name="sdk.dir" location="${sdk.dir}" />
             <property name="test.runner" value="${test.runner}" />
