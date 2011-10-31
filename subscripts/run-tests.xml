@@ -50,6 +50,8 @@
         <mkdir dir="${coverage.log.output.directory}" />
         <mkdir dir="${coverage.output.directory}" />
 
+        <!-- Execute in directory of test project.
+             Because coverage.ec is pulled to current directory. -->
         <exec executable="ant" dir="${test.project.directory}"
                 failonerror="true" searchpath="true">
             <arg value="-Dsdk.dir=${sdk.dir}" />
