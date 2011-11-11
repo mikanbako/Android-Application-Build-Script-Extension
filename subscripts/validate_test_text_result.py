@@ -1,14 +1,28 @@
 #!/usr/bin/env python
 # coding: UTF-8
-import argparse
-import sys
-import re
+
+# Copyright 2011 Keita Kita
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 # Validate test result represented as text.
 #
 # If the test failed, this script returns code -1.
 # If the test succeeded, this script returns code 0.
 
+import argparse
+import sys
+import re
 
 TARGET_RUN_TESTS = 'run-tests'
 
