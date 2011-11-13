@@ -31,7 +31,7 @@
     </target>
 
     <target name="run-tests-and-judge" depends="-make-test-result-directory"
-            description="Run tests and jundge whether the test succeeded.">
+            description="Run tests and jundge whether the test succeeded. If the test is failed, the build will fail.">
         <ant target="run-tests" dir="${test.project.directory}"
                 inheritall="false" output="${test.result.text.output}">
             <property name="sdk.dir" location="${sdk.dir}" />
@@ -82,7 +82,7 @@
     </target>
 
     <target name="coverage-reports"
-            description="Run tests, measure coverage and generate XML test + XML/HTML coverage reports.">
+            description="Run tests and generate test report by XML and coverage report by XML and HTML.">
         <ant target="coverage-reports" dir="${test.project.directory}"
                 inheritall="false">
             <property name="sdk.dir" location="${sdk.dir}" />

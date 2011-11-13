@@ -17,8 +17,34 @@
 
 # Run tests and output result as XML.
 #
-# This script must be ran by Jython. CLASSPATH must contain ddmlib.jar.
+# This script must be ran by Jython. CLASSPATH environment variable must
+# contain ddmlib.jar provided by Android SDK.
+#
 # Android emulator must launched or device must be connected.
+#
+# Usage :
+
+#   1. Set path of ddmlib.jar to CLASSPATH environment variable. For example :
+#
+#     export CLASSPATH=<ANDROID_SDK_HOME>/tools/lib/ddmlib.jar
+#
+#   2. Install application and test application to your device or emulator.
+#
+#   3. Run this script by Jython.
+#
+#     Run default test runner (android.test.InstrumentationTestRunner) :
+#       ./run_tests_for_xml.py -a <path_of_adb> <test_project_package_name>
+#
+#     Run specific test runner :
+#       ./run_tests_for_xml.py -a <path_of_adb> <test_project_package_name> <test_runner_name>
+#
+#     Run test runner on specific device or emulator, if -s option is used.
+#       ./run_tests_for_xml.py -a <path_of_adb> -s <serial_of_device> <test_project_package_name> <test_runner_name>
+#
+#     XML of test result is printed to standard output.
+#
+#     Run for detail :
+#       ./run_tests_for_xml.py --help
 
 from datetime import datetime
 from datetime import timedelta
