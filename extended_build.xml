@@ -14,26 +14,33 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<project>
-    <property name="extended.basedir" location="${basedir}/build" />
-
+<project name="extended_build">
+    <dirname property="extended.basedir" file="${ant.file.extended_build}" />
     <property name="config.directory" location="${extended.basedir}/config" />
     <property name="externals.directory" location="${extended.basedir}/externals" />
     <property name="subscripts.directory" location="${extended.basedir}/subscripts" />
-    <property name="subscripts.test.project.directory"
-            location="${subscripts.directory}/test_project" />
     <property name="reports.directory" location="${basedir}/reports" />
-    <property name="python.executable" value="python" />
+    <property name="jython.executable" value="jython" />
 
     <property file="${config.directory}/extension.properties" />
 
-    <!-- Clean workspace.
-         This target does not have description attribute. Because this target
-         is private from build.xml.
-     -->
-    <target name="clean-all" depends="clean">
-        <antcall target="-clean-tests-if-enabled" />
+    <target name="clean-reports" description="Remove reports directory."
+            depends="all">
         <delete dir="${reports.directory}" />
+
+        <if condition="${project.is.test}">
+            <then>
+                <local name="tested.project.absolute.directory" />
+                <property name="tested.project.absolute.directory"
+                        location="${tested.project.dir}"/>
+                <ant dir="${tested.project.absolute.directory}"
+                        target="clean-reports" inheritAll="false" />
+            </then>
+        </if>
+    </target>
+
+    <target name="clean-all" description="Call clean and clean-reports."
+            depends="all, clean, clean-reports">
     </target>
 
     <if condition="${findbugs.enable}">
@@ -45,13 +52,6 @@
     <if condition="${test.enable}">
         <then>
             <import file="${subscripts.directory}/run-tests.xml" />
-            <property name="test.project.directory"
-                    location="${basedir}/${test.project.directory}" />
         </then>
     </if>
-
-    <target name="-clean-tests-if-enabled" if="${test.enable}">
-        <ant dir="${test.project.directory}" target="clean"
-                inheritAll="false" />
-    </target>
 </project>
