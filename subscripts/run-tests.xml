@@ -15,84 +15,106 @@
     limitations under the License.
 -->
 <project>
-    <property name="test.result.text.output"
-            location="${reports.directory}/test_result.txt" />
+    <property name="test.result.xml.output"
+            location="${reports.directory}/test_result.xml" />
     <property name="coverage.log.output"
             location="${reports.directory}/log_coverage.txt" />
-    <property name="coverage.directory.in.test.project"
-            location="${test.project.directory}/coverage" />
     <property name="coverage.output.directory"
             location="${reports.directory}" />
-    <property name="validation.script.for.text"
-            location="${subscripts.directory}/validate_test_text_result.py" />
+    <property name="coverage.xml.output"
+            location="${reports.directory}/coverage.xml" />
+    <property name="coverage.html.output"
+            location="${reports.directory}/coverage.html" />
+
+    <property name="run.tests.for.xml.script"
+            location="${subscripts.directory}/run_tests_for_xml.py" />
+    <property name="classpath.for.jython.scripts"
+            value="${sdk.dir}/tools/lib/ddmlib.jar" />
+
 
     <target name="-make-test-result-directory">
         <mkdir dir="${reports.directory}"/>
     </target>
 
-    <target name="run-tests-and-judge" depends="-make-test-result-directory"
-            description="Run tests and jundge whether the test succeeded. If the test is failed, the build will fail.">
-        <ant target="run-tests" dir="${test.project.directory}"
-                inheritall="false" output="${test.result.text.output}">
-            <property name="sdk.dir" location="${sdk.dir}" />
-            <property name="test.runner" value="${test.runner}" />
-            <property name="adb.device.arg" value="${adb.device.arg}" />
-            <property name="subscripts.test.project.directory"
-                location="${subscripts.test.project.directory}" />
-        </ant>
-        <exec executable="${python.executable}" failonerror="true">
-            <arg path="${validation.script.for.text}" />
-            <arg path="${test.result.text.output}" />
-        </exec>
+    <target name="-get-manifest-package">
+        <xpath input="AndroidManifest.xml"
+                expression="/manifest/@package" output="manifest.package" />
     </target>
 
-    <target name="run-tests-xml" depends="-make-test-result-directory"
+    <target name="-get-tested-manifest-package">
+        <local name="tested.project.manifest.file" />
+        <property name="tested.project.manifest.file"
+                location="${tested.project.dir}/AndroidManifest.xml" />
+        <xpath input="${tested.project.manifest.file}"
+                expression="/manifest/@package" output="tested.manifest.package" />
+    </target>
+
+    <target name="-test-xml"
+            depends="-get-manifest-package">
+        <echo message="Test ${test.runner} on ${manifest.package}." />
+        <exec executable="${jython.executable}" failonerror="true">
+            <env key="CLASSPATH" path="${classpath.for.jython.scripts}" />
+            <arg path="${run.tests.for.xml.script}" />
+            <arg value="-a" />
+            <arg path="${adb}" />
+            <arg value="-b" />
+            <arg value="${adb.device.arg}" />
+            <arg value="-o" />
+            <arg value="${test.result.xml.output}" />
+            <arg value="${manifest.package}" />
+            <arg value="${test.runner}" />
+        </exec>
+        <echo message="XML of test result is outputted to ${test.result.xml.output}" />
+    </target>
+
+    <target name="-test-coverage-xml" depends="-get-manifest-package, -get-tested-manifest-package">
+        <echo message="Run tests and measure coverage about ${test.runner} on ${manifest.package}." />
+        <exec executable="${jython.executable}" failonerror="true">
+            <env key="CLASSPATH" path="${classpath.for.jython.scripts}" />
+            <arg path="${run.tests.for.xml.script}" />
+            <arg value="-a" />
+            <arg path="${adb}" />
+            <arg value="-b" />
+            <arg value="${adb.device.arg}" />
+            <arg value="-o" />
+            <arg value="${test.result.xml.output}" />
+            <arg value="--coverage" />
+            <arg value="${manifest.package}" />
+            <arg value="${test.runner}" />
+        </exec>
+
+        <exec executable="${adb}" failonerror="true">
+            <arg line="${adb.device.arg}" />
+            <arg value="pull" />
+            <arg value="/data/data/${tested.manifest.package}/coverage.ec" />
+            <arg value="${basedir}/coverage.ec" />
+        </exec>
+        <emma>
+            <report sourcepath="${tested.project.absolute.dir}/${source.dir}"
+                    verbosity="${verbosity}">
+                <infileset dir="${basedir}">
+                    <include name="coverage.ec" />
+                    <include name="coverage.em" />
+                </infileset>
+                <xml outfile="${coverage.xml.output}" />
+                <html outfile="${coverage.html.output}" encoding="UTF-8" />
+           </report>
+        </emma>
+        <delete file="coverage.ec" />
+        <delete file="coverage.em" />
+        <echo message="HTML and XML of coverage report are outputted to ${coverage.html.output} and ${coverage.xml.output}" />
+    </target>
+
+    <target name="test-xml"
+            depends="-test-project-check, -make-test-result-directory"
             description="Run tests and generate XML report.">
-        <ant target="run-tests-xml" dir="${test.project.directory}"
-                inheritall="false">
-            <property name="sdk.dir" location="${sdk.dir}" />
-            <property name="test.runner" value="${test.runner}" />
-            <property name="extended.build" value="true" />
-            <property name="test.enable" value="true" />
-            <property name="adb.device.arg" value="${adb.device.arg}" />
-            <property name="subscripts.test.project.directory"
-                location="${subscripts.test.project.directory}" />
-            <property name="reports.directory" location="${reports.directory}" />
-        </ant>
-    </target>
-
-    <target name="coverage" description="Run tests and generate coverage report.">
-        <local name="coverage.log.output.directory" />
-        <dirname file="${coverage.log.output}" property="coverage.log.output.directory" />
-        <mkdir dir="${coverage.log.output.directory}" />
-        <mkdir dir="${coverage.output.directory}" />
-
-        <!-- Execute in directory of test project.
-             Because coverage.ec is pulled to current directory. -->
-        <exec executable="ant" dir="${test.project.directory}"
-                failonerror="true" searchpath="true">
-            <arg value="-Dsdk.dir=${sdk.dir}" />
-            <arg value="-Dtest.runner=${test.runner}" />
-            <arg value="-Dadb.device.arg=${adb.device.arg}" />
-            <arg value="coverage" />
-            <redirector output="${coverage.log.output}" alwayslog="true" />
-        </exec>
-        <echo message="Move coverage report to ${coverage.output.directory}." />
-        <move file="${coverage.directory.in.test.project}" todir="${coverage.output.directory}" />
-    </target>
-
-    <target name="coverage-reports"
-            description="Run tests and generate test report by XML and coverage report by XML and HTML.">
-        <ant target="coverage-reports" dir="${test.project.directory}"
-                inheritall="false">
-            <property name="sdk.dir" location="${sdk.dir}" />
-            <property name="test.runner" value="${test.runner}" />
-            <property name="extended.build" value="true" />
-            <property name="test.enable" value="true" />
-            <property name="adb.device.arg" value="${adb.device.arg}" />
-            <property name="subscripts.test.project.directory"
-                location="${subscripts.test.project.directory}" />
-            <property name="reports.directory" location="${reports.directory}" />
-        </ant>
+        <if condition="${emma.enabled}">
+            <then>
+                <antcall target="-test-coverage-xml" />
+            </then>
+            <else>
+                <antcall target="-test-xml" />
+            </else>
+        </if>
     </target>
 </project>

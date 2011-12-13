@@ -30,8 +30,7 @@
     <property name="findbugs.exclude.filter"
             location="${config.directory}/findbugs-exclude-filter.xml" />
 
-    <target name="findbugs" depends="compile"
-            description="Run FindBugs.">
+    <target name="findbugs" description="Run FindBugs." depends="-compile">
         <taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" />
 
         <!-- Set default properties. -->
