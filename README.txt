@@ -56,12 +56,14 @@ Added Targets :
 
     After "FindBugs Setup" :
 
-        findbugs : Run FindBugs.
+        findbugs : Run FindBugs and report as HTML.
+
+        findbugs-xml : Run FindBugs and report as XML.
 
         Example :
 
             ant findbugs
-                Run FindBugs on project executing Ant.
+                Run FindBugs and report as HTML on project executing Ant.
 
             NOTICE : If you located findbugs-ant.jar to other directory,
                      you must specify path of it by -lib option of Ant.

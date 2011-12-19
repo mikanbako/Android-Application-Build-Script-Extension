@@ -15,35 +15,26 @@
     limitations under the License.
 -->
 <project>
-    <!--
-    Properties :
-        findbugs.output : Output format.
-        findbugs.output.filename : Name of report file.
-     -->
-
     <property name="findbugs.output.directory" location="${reports.directory}" />
 
     <property name="findbugs.output.filename.exclude.extension"
             value="findbugs" />
     <property name="findbugs.output.file.html"
             location="${findbugs.output.directory}/${findbugs.output.filename.exclude.extension}.html" />
+    <property name="findbugs.output.file.xml"
+            location="${findbugs.output.directory}/${findbugs.output.filename.exclude.extension}.xml" />
+
     <property name="findbugs.exclude.filter"
             location="${config.directory}/findbugs-exclude-filter.xml" />
 
-    <target name="findbugs" description="Run FindBugs." depends="-compile">
-        <taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" />
+    <target name="-run-findbugs" depends="-compile">
+        <!--
+        Properties :
+            findbugs.output : Output format.
+            findbugs.output.filename : Name of report file.
+         -->
 
-        <!-- Set default properties. -->
-        <condition property="findbugs.output" value="html">
-            <not>
-                <isset property="findbugs.output" />
-            </not>
-        </condition>
-        <condition property="findbugs.output.file" value="${findbugs.output.file.html}">
-            <not>
-                <isset property="findbugs.output.filename" />
-            </not>
-        </condition>
+        <taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" />
 
         <mkdir dir="${findbugs.output.directory}" />
 
@@ -59,5 +50,19 @@
             <auxClasspath path="${android.jar}" />
             <class location="${out.classes.absolute.dir}" />
         </findbugs>
+    </target>
+
+    <target name="findbugs" description="Run FindBugs and report by HTML.">
+        <property name="findbugs.output" value="html" />
+        <property name="findbugs.output.file" location="${findbugs.output.file.html}" />
+
+        <antcall target="-run-findbugs" />
+    </target>
+
+    <target name="findbugs-xml" description="Run FindBugs and report by XML.">
+        <property name="findbugs.output" value="xml" />
+        <property name="findbugs.output.file" location="${findbugs.output.file.xml}" />
+
+        <antcall target="-run-findbugs" />
     </target>
 </project>
