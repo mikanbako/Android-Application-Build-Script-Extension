@@ -29,9 +29,9 @@
 
     <target name="-run-findbugs" depends="-compile">
         <!--
-        Properties :
-            findbugs.output : Output format.
-            findbugs.output.filename : Name of report file.
+            Parameters :
+                findbugs.output : Output format.
+                findbugs.output.filename : Name of report file.
          -->
 
         <taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" />
@@ -53,16 +53,16 @@
     </target>
 
     <target name="findbugs" description="Run FindBugs and report by HTML.">
-        <property name="findbugs.output" value="html" />
-        <property name="findbugs.output.file" location="${findbugs.output.file.html}" />
-
-        <antcall target="-run-findbugs" />
+        <antcall target="-run-findbugs">
+            <param name="findbugs.output" value="html" />
+            <param name="findbugs.output.file" location="${findbugs.output.file.html}" />
+        </antcall>
     </target>
 
     <target name="findbugs-xml" description="Run FindBugs and report by XML.">
-        <property name="findbugs.output" value="xml" />
-        <property name="findbugs.output.file" location="${findbugs.output.file.xml}" />
-
-        <antcall target="-run-findbugs" />
+        <antcall target="-run-findbugs">
+            <param name="findbugs.output" value="xml" />
+            <param name="findbugs.output.file" location="${findbugs.output.file.xml}" />
+        </antcall>
     </target>
 </project>
