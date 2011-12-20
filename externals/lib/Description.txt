@@ -1,3 +1,0 @@
-This directory contains external library for Ant.
-
-* findbugs-ant.jar for FindBugs.
