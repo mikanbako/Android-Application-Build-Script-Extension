@@ -7,6 +7,7 @@ Features :
 
     * Add target for static code analyzing.
 
+        * Checkstyle (http://checkstyle.sourceforge.net/)
         * FindBugs (http://findbugs.sourceforge.net/)
 
     * Add targets for tests.
@@ -31,6 +32,15 @@ First Setup :
 
     3. Replace the value of version-tag to "custom" at build.xml.
 
+Checkstyle Setup :
+
+    1. Locate checkstyle-x.x-all.jar to one of library directory of Ant.
+
+    2. Turn true checkstyle.enable in config/extension.properties.
+
+    3. Modify or replace config/checkstyle-config.xml to your configuration
+       if you need that.
+
 FindBugs Setup :
 
     1. Install FindBugs to externals/findbugs or other directory.
@@ -53,6 +63,20 @@ Test Setup :
     3. Turn true test.enable in config/extension.properties.
 
 Added Targets :
+
+    After "Checkstyle Setup" :
+
+        checkstyle : Run Checkstyle and report as text.
+
+        checkstyle-xml : Run Checkstyle and report as XML.
+
+        Example :
+
+            ant checkstyle
+                Run Checkstyle and report as text on project executing Ant.
+
+            NOTICE : If you located checkstyle-x.x-all.jar to other directory,
+                     you must specify path of it by -lib option of Ant.
 
     After "FindBugs Setup" :
 

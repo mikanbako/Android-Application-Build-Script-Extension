@@ -43,6 +43,12 @@
             depends="all, clean, clean-reports">
     </target>
 
+    <if condition="${checkstyle.enable}">
+        <then>
+            <import file="${subscripts.directory}/checkstyle.xml" />
+        </then>
+    </if>
+
     <if condition="${findbugs.enable}">
         <then>
             <import file="${subscripts.directory}/findbugs.xml" />

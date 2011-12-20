@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright 2011 Keita Kita
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<project xmlns:cs="antlib:com.puppycrawl.tools.checkstyle">
+    <property name="checkstyle.output.directory" location="${reports.directory}" />
+
+    <property name="checkstyle.output.filename.exclude.extension"
+            value="checkstyle" />
+    <property name="checkstyle.output.file.text"
+            location="${checkstyle.output.directory}/${checkstyle.output.filename.exclude.extension}.txt" />
+    <property name="checkstyle.output.file.xml"
+            location="${checkstyle.output.directory}/${checkstyle.output.filename.exclude.extension}.xml" />
+    <property name="checkstyle.config"
+            location="${config.directory}/checkstyle-config.xml" />
+
+    <target name="-run-checkstyle">
+        <!--
+            Parameters :
+                checkstyle.formatter.type : Output format type.
+                checkstyle.formatter.toFile : Name of report file.
+         -->
+
+        <mkdir dir="${checkstyle.output.directory}" />
+
+        <cs:checkstyle config="${checkstyle.config}"
+                failOnViolation="false" failureProperty="checkstyle.violation">
+            <!-- Ignore ${gen.absolute.dir} because sources in it are generated. -->
+            <fileset dir="${source.absolute.dir}" casesensitive="yes">
+                <include name="**/*.java" />
+            </fileset>
+
+            <cs:formatter type="plain" />
+            <cs:formatter type="${checkstyle.formatter.type}"
+                    toFile="${checkstyle.formatter.toFile}" />
+        </cs:checkstyle>
+    </target>
+
+    <target name="checkstyle" description="Run Checkstyle and report by text.">
+        <antcall target="-run-checkstyle">
+            <param name="checkstyle.formatter.type" value="plain" />
+            <param name="checkstyle.formatter.toFile"
+                    location="${checkstyle.output.file.text}" />
+        </antcall>
+    </target>
+
+    <target name="checkstyle-xml" description="Run Checkstyle and report by XML.">
+        <antcall target="-run-checkstyle">
+            <param name="checkstyle.formatter.type" value="xml" />
+            <param name="checkstyle.formatter.toFile"
+                    location="${checkstyle.output.file.xml}" />
+        </antcall>
+    </target>
+</project>
