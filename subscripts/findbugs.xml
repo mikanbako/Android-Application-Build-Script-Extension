@@ -24,9 +24,6 @@
     <property name="findbugs.output.file.xml"
             location="${findbugs.output.directory}/${findbugs.output.filename.exclude.extension}.xml" />
 
-    <property name="findbugs.exclude.filter"
-            location="${config.directory}/findbugs-exclude-filter.xml" />
-
     <target name="-run-findbugs" depends="-compile">
         <!--
             Parameters :
@@ -41,7 +38,7 @@
         <findbugs home="${findbugs.home}"
                 output="${findbugs.output}"
                 outputFile="${findbugs.output.file}"
-                excludeFilter="${findbugs.exclude.filter}"
+                excludeFilter="${findbugs.exclude.filter.file}"
                 failOnError="true"
                 warningsProperty="findbugs.warning.reported"
                 jvmargs="-Duser.language=en">
