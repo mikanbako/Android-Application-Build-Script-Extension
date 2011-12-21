@@ -23,8 +23,6 @@
             location="${checkstyle.output.directory}/${checkstyle.output.filename.exclude.extension}.txt" />
     <property name="checkstyle.output.file.xml"
             location="${checkstyle.output.directory}/${checkstyle.output.filename.exclude.extension}.xml" />
-    <property name="checkstyle.config"
-            location="${config.directory}/checkstyle-config.xml" />
 
     <target name="-run-checkstyle">
         <!--
@@ -35,7 +33,7 @@
 
         <mkdir dir="${checkstyle.output.directory}" />
 
-        <cs:checkstyle config="${checkstyle.config}"
+        <cs:checkstyle config="${checkstyle.config.file}"
                 failOnViolation="false" failureProperty="checkstyle.violation">
             <!-- Ignore ${gen.absolute.dir} because sources in it are generated. -->
             <fileset dir="${source.absolute.dir}" casesensitive="yes">
