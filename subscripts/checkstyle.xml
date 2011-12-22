@@ -28,7 +28,7 @@
         <!--
             Parameters :
                 checkstyle.formatter.type : Output format type.
-                checkstyle.formatter.toFile : Name of report file.
+                checkstyle.formatter.toFile : Path of report file.
          -->
 
         <mkdir dir="${checkstyle.output.directory}" />
