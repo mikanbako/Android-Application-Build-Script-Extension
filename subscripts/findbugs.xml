@@ -28,7 +28,7 @@
         <!--
             Parameters :
                 findbugs.output : Output format.
-                findbugs.output.filename : Name of report file.
+                findbugs.output.file : Path of report file.
          -->
 
         <taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" />
