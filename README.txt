@@ -9,6 +9,7 @@ Features :
 
         * Checkstyle (http://checkstyle.sourceforge.net/)
         * FindBugs (http://findbugs.sourceforge.net/)
+        * JavaNCSS (http://www.kclee.de/clemens/java/javancss/)
 
     * Add targets for tests.
 
@@ -51,6 +52,13 @@ FindBugs Setup :
 
     4. Modify findbugs.home to directory installed FindBugs if you need.
 
+JavaNCSS Setup :
+
+    1. Locate jars in lib directory of JavaNCSS distribution to one of library
+       directory of Ant.
+
+    2. Turn true javancss.enable in config/extension.properties.
+
 Test Setup :
 
     1. Copy the below and paste to the below of <import> task at build.xml in the
@@ -90,6 +98,20 @@ Added Targets :
                 Run FindBugs and report as HTML on project executing Ant.
 
             NOTICE : If you located findbugs-ant.jar to other directory,
+                     you must specify path of it by -lib option of Ant.
+
+    After "JavaNCSS Setup" :
+
+        javancss : Run JavaNCSS and report as text.
+
+        javancss-xml : Run JavaNCSS and report as XML.
+
+        Example :
+
+            ant javancss
+                Run JavaNCSS and report as text on project executing Ant.
+
+            NOTICE : If you located jars of JavaNCSS to other directory,
                      you must specify path of it by -lib option of Ant.
 
     After "Test Setup" :
