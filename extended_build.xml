@@ -55,6 +55,13 @@
         </then>
     </if>
 
+    <if condition="${javancss.enable}">
+        <then>
+            <import file="${subscripts.directory}/javancss.xml" />
+        </then>
+    </if>
+
+
     <if condition="${test.enable}">
         <then>
             <import file="${subscripts.directory}/run-tests.xml" />
