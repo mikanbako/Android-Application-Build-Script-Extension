@@ -10,6 +10,7 @@ Features :
         * Checkstyle (http://checkstyle.sourceforge.net/)
         * FindBugs (http://findbugs.sourceforge.net/)
         * JavaNCSS (http://www.kclee.de/clemens/java/javancss/)
+        * PMD (http://pmd.sourceforge.net/)
 
     * Add targets for tests.
 
@@ -58,6 +59,13 @@ JavaNCSS Setup :
        directory of Ant.
 
     2. Turn true javancss.enable in config/extension.properties.
+
+PMD Setup :
+
+    1. Locate jars in lib directory of PMD distribution to one of library
+       directory of Ant.
+
+    2. Turn true pmd.enable in config/extension.properties.
 
 Test Setup :
 
@@ -112,6 +120,20 @@ Added Targets :
                 Run JavaNCSS and report as text on project executing Ant.
 
             NOTICE : If you located jars of JavaNCSS to other directory,
+                     you must specify path of it by -lib option of Ant.
+
+    After "PMD Setup" :
+
+        pmd : Run PMD and report by HTML.
+
+        pmd-xml : Run PMD and report by XML.
+
+        Example :
+
+            ant pmd
+                Run PMD and report by HTML on project executing Ant.
+
+            NOTICE : If you located jars of PMD to other directory,
                      you must specify path of it by -lib option of Ant.
 
     After "Test Setup" :
