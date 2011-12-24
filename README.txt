@@ -20,7 +20,8 @@ Required softwares :
 
     * Android SDK Tools Revision 14 or higher (http://developer.android.com/)
     * Ant 1.8.0 or higher (http://ant.apache.org/)
-    * Jython 2.5.x (http://www.jython.org/)
+    * Jython 2.5.x (http://www.jython.org/) for targets of test.
+    * Static code analyzer package for targets for static code analyze.
 
 First Setup :
 
@@ -74,42 +75,42 @@ Added Targets :
 
     After "Checkstyle Setup" :
 
-        checkstyle : Run Checkstyle and report as text.
+        checkstyle : Run Checkstyle and report by text.
 
-        checkstyle-xml : Run Checkstyle and report as XML.
+        checkstyle-xml : Run Checkstyle and report by XML.
 
         Example :
 
             ant checkstyle
-                Run Checkstyle and report as text on project executing Ant.
+                Run Checkstyle and report by text on project executing Ant.
 
             NOTICE : If you located checkstyle-x.x-all.jar to other directory,
                      you must specify path of it by -lib option of Ant.
 
     After "FindBugs Setup" :
 
-        findbugs : Run FindBugs and report as HTML.
+        findbugs : Run FindBugs and report by HTML.
 
-        findbugs-xml : Run FindBugs and report as XML.
+        findbugs-xml : Run FindBugs and report by XML.
 
         Example :
 
             ant findbugs
-                Run FindBugs and report as HTML on project executing Ant.
+                Run FindBugs and report by HTML on project executing Ant.
 
             NOTICE : If you located findbugs-ant.jar to other directory,
                      you must specify path of it by -lib option of Ant.
 
     After "JavaNCSS Setup" :
 
-        javancss : Run JavaNCSS and report as text.
+        javancss : Run JavaNCSS and report by text.
 
-        javancss-xml : Run JavaNCSS and report as XML.
+        javancss-xml : Run JavaNCSS and report by XML.
 
         Example :
 
             ant javancss
-                Run JavaNCSS and report as text on project executing Ant.
+                Run JavaNCSS and report by text on project executing Ant.
 
             NOTICE : If you located jars of JavaNCSS to other directory,
                      you must specify path of it by -lib option of Ant.
