@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright 2011 Keita Kita
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<project>
+    <property name="pmd.cpd.output.directory" location="${reports.directory}" />
+
+    <property name="pmd.cpd.output.filename.exclude.extension"
+            value="cpd" />
+    <property name="pmd.cpd.output.file.text"
+            location="${pmd.cpd.output.directory}/${pmd.cpd.output.filename.exclude.extension}.txt" />
+    <property name="pmd.cpd.output.file.xml"
+            location="${pmd.cpd.output.directory}/${pmd.cpd.output.filename.exclude.extension}.xml" />
+
+    <target name="-run-cpd">
+        <!--
+            Parameters :
+                pmd.cpd.format : Output format.
+                pmd.cpd.output.file : Path of report file.
+         -->
+
+        <taskdef name="cpd" classname="net.sourceforge.pmd.cpd.CPDTask" />
+
+        <mkdir dir="${pmd.cpd.output.directory}" />
+
+        <cpd minimumTokenCount="${pmd.cpd.minimum.token.count}"
+                format="${pmd.cpd.format}"
+                outputFile="${pmd.cpd.output.file}">
+            <fileset dir="${source.absolute.dir}">
+                <include name="**/*.java" />
+            </fileset>
+        </cpd>
+    </target>
+
+    <target name="cpd" description="Run PMD's Copy/Paste Detector and report by text.">
+        <antcall target="-run-cpd">
+            <param name="pmd.cpd.format" value="text" />
+            <param name="pmd.cpd.output.file" value="${pmd.cpd.output.file.text}" />
+        </antcall>
+    </target>
+
+    <target name="cpd-xml" description="Run PMD's Copy/Paste Detector and report by XML.">
+        <antcall target="-run-cpd">
+            <param name="pmd.cpd.format" value="xml" />
+            <param name="pmd.cpd.output.file" value="${pmd.cpd.output.file.xml}" />
+        </antcall>
+    </target>
+</project>
