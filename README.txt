@@ -11,6 +11,7 @@ Features :
         * FindBugs (http://findbugs.sourceforge.net/)
         * JavaNCSS (http://www.kclee.de/clemens/java/javancss/)
         * PMD (http://pmd.sourceforge.net/)
+        * PMD's Copy/Paste Detector (CPD) (http://pmd.sourceforge.net/cpd.html)
 
     * Add targets for tests.
 
@@ -67,6 +68,13 @@ PMD Setup :
        directory of Ant.
 
     2. Turn true pmd.enable in config/extension.properties.
+
+PMD's Copy/Paste Detector (CPD) Setup :
+
+    1. Locate jars in lib directory of PMD distribution to one of library
+       directory of Ant.
+
+    2. Turn true pmd.cpd.enable in config/extension.properties.
 
 Test Setup :
 
@@ -133,6 +141,21 @@ Added Targets :
 
             ant pmd
                 Run PMD and report by HTML on project executing Ant.
+
+            NOTICE : If you located jars of PMD to other directory,
+                     you must specify path of it by -lib option of Ant.
+
+    After "PMD's Copy/Paste Detector (CPD) Setup" :
+
+        cpd : Run PMD's Copy/Paste Detector and report by text.
+
+        cpd-xml : Run PMD's Copy/Paste Detector and report by XML.
+
+        Example :
+
+            ant cpd
+                Run PMD's Copy/Paste Detector and report by text on project
+                executing Ant.
 
             NOTICE : If you located jars of PMD to other directory,
                      you must specify path of it by -lib option of Ant.
