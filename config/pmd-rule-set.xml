@@ -47,6 +47,7 @@
         <exclude name="AvoidDeeplyNestedIfStmts" />
         <exclude name="AvoidReassigningParameters" />
         <exclude name="SwitchDensity" />
+        <exclude name="ConfusingTernary" />
         <exclude name="ImmutableField" />
         <exclude name="AssignmentToNonFinalStatic" />
         <exclude name="AvoidSynchronizedAtMethodLevel" />
