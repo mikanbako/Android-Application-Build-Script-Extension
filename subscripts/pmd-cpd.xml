@@ -37,7 +37,8 @@
 
         <cpd minimumTokenCount="${pmd.cpd.minimum.token.count}"
                 format="${pmd.cpd.format}"
-                outputFile="${pmd.cpd.output.file}">
+                outputFile="${pmd.cpd.output.file}"
+                encoding="${pmd.cpd.encoding}">
             <fileset dir="${source.absolute.dir}">
                 <include name="**/*.java" />
             </fileset>
