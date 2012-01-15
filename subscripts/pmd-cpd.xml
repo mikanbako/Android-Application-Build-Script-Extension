@@ -43,6 +43,7 @@
                 <include name="**/*.java" />
             </fileset>
         </cpd>
+        <echo message="CPD report is saved to ${pmd.cpd.output.file}" />
     </target>
 
     <target name="cpd" description="Run PMD's Copy/Paste Detector and report by text.">

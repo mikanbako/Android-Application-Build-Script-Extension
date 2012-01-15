@@ -43,6 +43,7 @@
             </fileset>
             <auxclasspath path="${android.jar}" />
         </pmd>
+        <echo message="PMD report is saved to ${pmd.output.file}" />
     </target>
 
     <target name="pmd" description="Run PMD and report by HTML.">

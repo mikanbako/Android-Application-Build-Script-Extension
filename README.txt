@@ -91,9 +91,11 @@ Added Targets :
 
     After "Checkstyle Setup" :
 
-        checkstyle : Run Checkstyle and report by text.
+        checkstyle : Run Checkstyle and report by text to
+                     "reports/checkstyle.txt".
 
-        checkstyle-xml : Run Checkstyle and report by XML.
+        checkstyle-xml : Run Checkstyle and report by XML to
+                         "reports/checkstyle.xml".
 
         Example :
 
@@ -105,9 +107,9 @@ Added Targets :
 
     After "FindBugs Setup" :
 
-        findbugs : Run FindBugs and report by HTML.
+        findbugs : Run FindBugs and report by HTML to "reports/findbugs.html".
 
-        findbugs-xml : Run FindBugs and report by XML.
+        findbugs-xml : Run FindBugs and report by XML to "reports/findbugs.xml".
 
         Example :
 
@@ -119,9 +121,11 @@ Added Targets :
 
     After "JavaNCSS Setup" :
 
-        javancss : Run JavaNCSS and report by text.
+        javancss : Run JavaNCSS and report by text to
+                   "reports/javancss_metrics.txt".
 
-        javancss-xml : Run JavaNCSS and report by XML.
+        javancss-xml : Run JavaNCSS and report by XML to
+                       "reports/javancss_metrics.xml".
 
         Example :
 
@@ -133,9 +137,11 @@ Added Targets :
 
     After "PMD Setup" :
 
-        pmd : Run PMD and report by HTML.
+        pmd : Run PMD and report by HTML to
+              "reports/pmd.html".
 
-        pmd-xml : Run PMD and report by XML.
+        pmd-xml : Run PMD and report by XML to
+                  "reports/pmd.xml".
 
         Example :
 
@@ -147,9 +153,11 @@ Added Targets :
 
     After "PMD's Copy/Paste Detector (CPD) Setup" :
 
-        cpd : Run PMD's Copy/Paste Detector and report by text.
+        cpd : Run PMD's Copy/Paste Detector and report by text to
+              "reports/cpd.txt".
 
-        cpd-xml : Run PMD's Copy/Paste Detector and report by XML.
+        cpd-xml : Run PMD's Copy/Paste Detector and report by XML to
+                  "reports/cpd.xml".
 
         Example :
 
@@ -165,6 +173,12 @@ Added Targets :
         These targets must be ran on test project.
 
         test-xml : Run tests and generate report by XML.
+
+            * Test results report to "reports/test_result.xml" in test project.
+
+            * Coverage report to "reports/coverage.html" and
+              "reports/coverage.xml" in test project when you run text-xml
+              target with emma target.
 
         Example :
 
