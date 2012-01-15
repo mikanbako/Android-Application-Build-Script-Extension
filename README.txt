@@ -195,3 +195,9 @@ Added Targets :
                 Build test and tested application, install the both application,
                 run tests and generate XML of test result and HTML / XML of
                 coverage reports.
+
+        Configurable property :
+
+            jython.executable : The command to execute Jython without any
+                                command line arguments. Default value is
+                                "jython".
