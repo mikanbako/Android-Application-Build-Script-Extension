@@ -64,6 +64,12 @@
         <exclude name="TooManyStaticImports" />
     </rule>
 
+    <!-- JUnit Tests -->
+    <rule ref="rulesets/junit.xml">
+        <exclude name="JUnitAssertionsShouldIncludeMessage" />
+        <exclude name="JUnitTestsShouldIncludeAssert" />
+    </rule>
+
     <!-- Migration Rules -->
     <rule ref="rulesets/migrating_to_15.xml" />
 
