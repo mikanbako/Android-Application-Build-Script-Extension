@@ -39,6 +39,7 @@
                 generateReport="true"
                 outputfile="${javancss.output.file}"
                 format="${javancss.format}" />
+        <echo message="JavaNCSS report is saved to ${javancss.output.file}" />
     </target>
 
     <target name="javancss" description="Run JavaNCSS and report by text.">

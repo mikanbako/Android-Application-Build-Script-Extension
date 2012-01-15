@@ -44,6 +44,7 @@
             <cs:formatter type="${checkstyle.formatter.type}"
                     toFile="${checkstyle.formatter.toFile}" />
         </cs:checkstyle>
+        <echo message="Checkstyle report is saved to ${checkstyle.formatter.toFile}" />
     </target>
 
     <target name="checkstyle" description="Run Checkstyle and report by text.">
