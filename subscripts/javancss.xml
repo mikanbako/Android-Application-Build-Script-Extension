@@ -24,35 +24,28 @@
     <property name="javancss.output.file.xml"
             location="${javancss.output.directory}/${javancss.output.filename.exclude.extension}.xml" />
 
-    <target name="-run-javancss">
-        <!--
-            Parameters :
-                javancss.format : Output format.
-                javancss.output.file : Path of report file.
-         -->
+    <macrodef name="run-javancss" description="Run JavaNCSS.">
+        <attribute name="format" description="Output format." />
+        <attribute name="output.file" description="Path of report file." />
+        <sequential>
+            <taskdef name="javancss" classname="javancss.JavancssAntTask" />
 
-        <taskdef name="javancss" classname="javancss.JavancssAntTask" />
+            <mkdir dir="${javancss.output.directory}" />
 
-        <mkdir dir="${javancss.output.directory}" />
-
-        <javancss srcdir="${source.absolute.dir}"
-                generateReport="true"
-                outputfile="${javancss.output.file}"
-                format="${javancss.format}" />
-        <echo message="JavaNCSS report is saved to ${javancss.output.file}" />
-    </target>
+            <javancss srcdir="${source.absolute.dir}"
+                    generateReport="true"
+                    outputfile="@{output.file}"
+                    format="@{format}" />
+            <echo message="JavaNCSS report is saved to @{output.file}" />
+        </sequential>
+    </macrodef>
 
     <target name="javancss" description="Run JavaNCSS and report by text.">
-        <antcall target="-run-javancss">
-            <param name="javancss.format" value="plain" />
-            <param name="javancss.output.file" location="${javancss.output.file.text}" />
-        </antcall>
+        <run-javancss format="plain"
+                output.file="${javancss.output.file.text}" />
     </target>
 
     <target name="javancss-xml" description="Run JavaNCSS and report by XML.">
-        <antcall target="-run-javancss">
-            <param name="javancss.format" value="xml" />
-            <param name="javancss.output.file" location="${javancss.output.file.xml}" />
-        </antcall>
+        <run-javancss format="xml" output.file="${javancss.output.file.xml}" />
     </target>
 </project>
