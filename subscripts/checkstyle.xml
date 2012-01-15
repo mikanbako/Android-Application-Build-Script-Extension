@@ -24,42 +24,36 @@
     <property name="checkstyle.output.file.xml"
             location="${checkstyle.output.directory}/${checkstyle.output.filename.exclude.extension}.xml" />
 
-    <target name="-run-checkstyle">
-        <!--
-            Parameters :
-                checkstyle.formatter.type : Output format type.
-                checkstyle.formatter.toFile : Path of report file.
-         -->
+    <macrodef name="run-checkstyle" description="Run checkstyle.">
+        <attribute name="formatter.type" description="Output format type." />
+        <attribute name="formatter.toFile" description="Path of report file." />
+        <sequential>
+            <mkdir dir="${checkstyle.output.directory}" />
 
-        <mkdir dir="${checkstyle.output.directory}" />
+            <cs:checkstyle config="${checkstyle.config.file}"
+                    failOnViolation="false"
+                    failureProperty="checkstyle.violation">
+                <!-- Ignore ${gen.absolute.dir} because it has
+                     generated sources. -->
+                <fileset dir="${source.absolute.dir}" casesensitive="yes">
+                    <include name="**/*.java" />
+                </fileset>
 
-        <cs:checkstyle config="${checkstyle.config.file}"
-                failOnViolation="false" failureProperty="checkstyle.violation">
-            <!-- Ignore ${gen.absolute.dir} because sources in it are generated. -->
-            <fileset dir="${source.absolute.dir}" casesensitive="yes">
-                <include name="**/*.java" />
-            </fileset>
-
-            <cs:formatter type="plain" />
-            <cs:formatter type="${checkstyle.formatter.type}"
-                    toFile="${checkstyle.formatter.toFile}" />
-        </cs:checkstyle>
-        <echo message="Checkstyle report is saved to ${checkstyle.formatter.toFile}" />
-    </target>
+                <cs:formatter type="plain" />
+                <cs:formatter type="@{formatter.type}"
+                        toFile="@{formatter.toFile}" />
+            </cs:checkstyle>
+            <echo message="Checkstyle report is saved to @{formatter.toFile}" />
+        </sequential>
+    </macrodef>
 
     <target name="checkstyle" description="Run Checkstyle and report by text.">
-        <antcall target="-run-checkstyle">
-            <param name="checkstyle.formatter.type" value="plain" />
-            <param name="checkstyle.formatter.toFile"
-                    location="${checkstyle.output.file.text}" />
-        </antcall>
+        <run-checkstyle formatter.type="plain"
+                formatter.toFile="${checkstyle.output.file.text}"/>
     </target>
 
     <target name="checkstyle-xml" description="Run Checkstyle and report by XML.">
-        <antcall target="-run-checkstyle">
-            <param name="checkstyle.formatter.type" value="xml" />
-            <param name="checkstyle.formatter.toFile"
-                    location="${checkstyle.output.file.xml}" />
-        </antcall>
+        <run-checkstyle formatter.type="xml"
+                formatter.toFile="${checkstyle.output.file.xml}"/>
     </target>
 </project>

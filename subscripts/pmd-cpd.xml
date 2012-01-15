@@ -24,39 +24,31 @@
     <property name="pmd.cpd.output.file.xml"
             location="${pmd.cpd.output.directory}/${pmd.cpd.output.filename.exclude.extension}.xml" />
 
-    <target name="-run-cpd">
-        <!--
-            Parameters :
-                pmd.cpd.format : Output format.
-                pmd.cpd.output.file : Path of report file.
-         -->
+    <macrodef name="run-cpd" description="Run PMD's Copy/Paste Detector.">
+        <attribute name="format" description="Output format." />
+        <attribute name="output.file" description="Path of report file." />
+        <sequential>
+            <taskdef name="cpd" classname="net.sourceforge.pmd.cpd.CPDTask" />
 
-        <taskdef name="cpd" classname="net.sourceforge.pmd.cpd.CPDTask" />
+            <mkdir dir="${pmd.cpd.output.directory}" />
 
-        <mkdir dir="${pmd.cpd.output.directory}" />
-
-        <cpd minimumTokenCount="${pmd.cpd.minimum.token.count}"
-                format="${pmd.cpd.format}"
-                outputFile="${pmd.cpd.output.file}"
-                encoding="${pmd.cpd.encoding}">
-            <fileset dir="${source.absolute.dir}">
-                <include name="**/*.java" />
-            </fileset>
-        </cpd>
-        <echo message="CPD report is saved to ${pmd.cpd.output.file}" />
-    </target>
+            <cpd minimumTokenCount="${pmd.cpd.minimum.token.count}"
+                    format="@{format}"
+                    outputFile="@{output.file}"
+                    encoding="${pmd.cpd.encoding}">
+                <fileset dir="${source.absolute.dir}">
+                    <include name="**/*.java" />
+                </fileset>
+            </cpd>
+            <echo message="CPD report is saved to @{output.file}" />
+        </sequential>
+    </macrodef>
 
     <target name="cpd" description="Run PMD's Copy/Paste Detector and report by text.">
-        <antcall target="-run-cpd">
-            <param name="pmd.cpd.format" value="text" />
-            <param name="pmd.cpd.output.file" value="${pmd.cpd.output.file.text}" />
-        </antcall>
+        <run-cpd format="text" output.file="${pmd.cpd.output.file.text}" />
     </target>
 
     <target name="cpd-xml" description="Run PMD's Copy/Paste Detector and report by XML.">
-        <antcall target="-run-cpd">
-            <param name="pmd.cpd.format" value="xml" />
-            <param name="pmd.cpd.output.file" value="${pmd.cpd.output.file.xml}" />
-        </antcall>
+        <run-cpd format="xml" output.file="${pmd.cpd.output.file.xml}" />
     </target>
 </project>

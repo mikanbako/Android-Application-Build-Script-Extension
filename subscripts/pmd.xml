@@ -24,39 +24,31 @@
     <property name="pmd.output.file.xml"
             location="${pmd.output.directory}/${pmd.output.filename.exclude.extension}.xml" />
 
-    <target name="-run-pmd">
-        <!--
-            Parameters :
-                pmd.format : Output format.
-                pmd.output.file : Path of report file.
-         -->
+    <macrodef name="run-pmd" description="Run PMD.">
+        <attribute name="format" description="Output format." />
+        <attribute name="output.file" description="Path of report file." />
+        <sequential>
+            <taskdef name="pmd" classname="net.sourceforge.pmd.ant.PMDTask" />
 
-        <taskdef name="pmd" classname="net.sourceforge.pmd.ant.PMDTask" />
+            <mkdir dir="${pmd.output.directory}" />
 
-        <mkdir dir="${pmd.output.directory}" />
-
-        <pmd rulesetfiles="${pmd.rule.set.file}" failonerror="true"
-                targetjdk="${pmd.target.jdk}" encoding="${pmd.encoding}">
-            <formatter type="${pmd.format}" toFile="${pmd.output.file}" />
-            <fileset dir="${source.absolute.dir}">
-                <include name="**/*.java" />
-            </fileset>
-            <auxclasspath path="${android.jar}" />
-        </pmd>
-        <echo message="PMD report is saved to ${pmd.output.file}" />
-    </target>
+            <pmd rulesetfiles="${pmd.rule.set.file}" failonerror="true"
+                    targetjdk="${pmd.target.jdk}" encoding="${pmd.encoding}">
+                <formatter type="@{format}" toFile="@{output.file}" />
+                <fileset dir="${source.absolute.dir}">
+                    <include name="**/*.java" />
+                </fileset>
+                <auxclasspath path="${android.jar}" />
+            </pmd>
+            <echo message="PMD report is saved to @{output.file}" />
+        </sequential>
+    </macrodef>
 
     <target name="pmd" description="Run PMD and report by HTML.">
-        <antcall target="-run-pmd">
-            <param name="pmd.format" value="html" />
-            <param name="pmd.output.file" value="${pmd.output.file.html}" />
-        </antcall>
+        <run-pmd format="html" output.file="${pmd.output.file.html}" />
     </target>
 
     <target name="pmd-xml" description="Run PMD and report by XML.">
-        <antcall target="-run-pmd">
-            <param name="pmd.format" value="xml" />
-            <param name="pmd.output.file" value="${pmd.output.file.xml}" />
-        </antcall>
+        <run-pmd format="xml" output.file="${pmd.output.file.xml}" />
     </target>
 </project>
