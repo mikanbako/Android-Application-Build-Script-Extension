@@ -25,12 +25,14 @@
             location="${checkstyle.output.directory}/${checkstyle.output.filename.exclude.extension}.xml" />
 
     <macrodef name="run-checkstyle" description="Run checkstyle.">
+        <attribute name="config.file" description="Path of configuration file." />
         <attribute name="formatter.type" description="Output format type." />
         <attribute name="formatter.toFile" description="Path of report file." />
         <sequential>
             <mkdir dir="${checkstyle.output.directory}" />
 
-            <cs:checkstyle config="${checkstyle.config.file}"
+            <echo message="Checkstyle configuration file is @{config.file}" />
+            <cs:checkstyle config="@{config.file}"
                     failOnViolation="false"
                     failureProperty="checkstyle.violation">
                 <!-- Ignore ${gen.absolute.dir} because it has
@@ -47,13 +49,29 @@
         </sequential>
     </macrodef>
 
-    <target name="checkstyle" description="Run Checkstyle and report by text.">
-        <run-checkstyle formatter.type="plain"
+    <target name="checkstyle" depends="-setup"
+            description="Run Checkstyle and report by text.">
+        <local name="config.file" />
+
+        <select-config-file destination="config.file"
+                main.config.file="${checkstyle.config.file}"
+                test.config.file="${checkstyle.test.config.file}" />
+        <run-checkstyle
+                config.file="${config.file}"
+                formatter.type="plain"
                 formatter.toFile="${checkstyle.output.file.text}"/>
     </target>
 
-    <target name="checkstyle-xml" description="Run Checkstyle and report by XML.">
-        <run-checkstyle formatter.type="xml"
+    <target name="checkstyle-xml" depends="-setup"
+            description="Run Checkstyle and report by XML.">
+        <local name="config.file" />
+
+        <select-config-file destination="config.file"
+                main.config.file="${checkstyle.config.file}"
+                test.config.file="${checkstyle.test.config.file}" />
+        <run-checkstyle
+                config.file="${config.file}"
+                formatter.type="xml"
                 formatter.toFile="${checkstyle.output.file.xml}"/>
     </target>
 </project>

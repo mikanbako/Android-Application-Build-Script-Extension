@@ -14,7 +14,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<ruleset name="Default Ruleset"
+<ruleset name="Default Ruleset for test project"
         xmlns="http://pmd.sf.net/ruleset/1.0.0"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0 http://pmd.sf.net/ruleset_xml_schema.xsd"
@@ -26,14 +26,10 @@
 
     <!-- Basic Rules -->
     <rule ref="rulesets/basic.xml">
+        <exclude name="EmptyCatchBlock" />
         <exclude name="ForLoopShouldBeWhileLoop" />
         <exclude name="CollapsibleIfStatements" />
         <exclude name="AvoidUsingOctalValues" />
-    </rule>
-    <rule ref="rulesets/basic.xml/EmptyCatchBlock">
-        <properties>
-            <property name="allowCommentedBlocks" value="true" />
-        </properties>
     </rule>
 
     <!-- Braces Rules -->
@@ -52,6 +48,10 @@
         <exclude name="AssignmentToNonFinalStatic" />
         <exclude name="MissingBreakInSwitch" />
         <exclude name="AvoidSynchronizedAtMethodLevel" />
+        <exclude name="AvoidInstanceofChecksInCatchClause" />
+        <exclude name="UncommentedEmptyMethod" />
+        <exclude name="UncommentedEmptyConstructor"/>
+        <exclude name="UnsynchronizedStaticDateFormatter" />
         <exclude name="EmptyMethodInAbstractClassShouldBeAbstract" />
         <exclude name="TooFewBranchesForASwitchStatement" />
     </rule>
@@ -64,14 +64,14 @@
         <exclude name="TooManyStaticImports" />
     </rule>
 
-    <!-- Migration Rules -->
-    <rule ref="rulesets/migrating_to_15.xml">
-        <exclude name="JUnit4TestShouldUseBeforeAnnotation" />
-        <exclude name="JUnit4TestShouldUseAfterAnnotation" />
-        <exclude name="JUnit4TestShouldUseTestAnnotation" />
-        <exclude name="JUnit4SuitesShouldUseSuiteAnnotation" />
-        <exclude name="JUnitUseExpected" />
+    <!-- JUnit Tests -->
+    <rule ref="rulesets/junit.xml">
+        <exclude name="JUnitAssertionsShouldIncludeMessage" />
+        <exclude name="JUnitTestsShouldIncludeAssert" />
     </rule>
+
+    <!-- Migration Rules -->
+    <rule ref="rulesets/migrating_to_15.xml" />
 
     <!-- Naming Rules -->
     <rule ref="rulesets/naming.xml">
@@ -82,9 +82,6 @@
         <exclude name="AbstractNaming" />
         <exclude name="BooleanGetMethodName" />
     </rule>
-
-    <!-- Strict Exception Rules -->
-    <rule ref="rulesets/strictexception.xml/AvoidThrowingNewInstanceOfSameException" />
 
     <!-- String and StringBuffer Rules -->
     <rule ref="rulesets/strings.xml">
