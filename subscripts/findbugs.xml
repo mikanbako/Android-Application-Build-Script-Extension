@@ -24,42 +24,53 @@
     <property name="findbugs.output.file.xml"
             location="${findbugs.output.directory}/${findbugs.output.filename.exclude.extension}.xml" />
 
-    <target name="-run-findbugs" depends="-compile">
-        <!--
-            Parameters :
-                findbugs.output : Output format.
-                findbugs.output.file : Path of report file.
-         -->
+    <macrodef name="run-findbugs" description="Run Findbugs.">
+        <attribute name="exclude.filter"
+                description="Path of exclude filter file." />
+        <attribute name="output" description="Output format." />
+        <attribute name="output.file" description="Path of report file." />
+        <sequential>
+            <taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" />
 
-        <taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" />
+            <mkdir dir="${findbugs.output.directory}" />
 
-        <mkdir dir="${findbugs.output.directory}" />
+            <echo message="Exclude filter is @{exclude.filter}" />
+            <findbugs home="${findbugs.home}"
+                    output="@{output}"
+                    outputFile="@{output.file}"
+                    excludeFilter="@{exclude.filter}"
+                    failOnError="true"
+                    warningsProperty="findbugs.warning.reported"
+                    jvmargs="-Duser.language=en">
+                <sourcePath path="${source.absolute.dir}" />
+                <sourcePath path="${gen.absolute.dir}" />
+                <auxClasspath path="${android.jar}" />
+                <class location="${out.classes.absolute.dir}" />
+            </findbugs>
+        </sequential>
+    </macrodef>
 
-        <findbugs home="${findbugs.home}"
-                output="${findbugs.output}"
-                outputFile="${findbugs.output.file}"
-                excludeFilter="${findbugs.exclude.filter.file}"
-                failOnError="true"
-                warningsProperty="findbugs.warning.reported"
-                jvmargs="-Duser.language=en">
-            <sourcePath path="${source.absolute.dir}" />
-            <sourcePath path="${gen.absolute.dir}" />
-            <auxClasspath path="${android.jar}" />
-            <class location="${out.classes.absolute.dir}" />
-        </findbugs>
+    <target name="findbugs" depends="-compile"
+            description="Run FindBugs and report by HTML.">
+        <local name="exclude.filter" />
+
+        <select-config-file destination="exclude.filter"
+                main.config.file="${findbugs.exclude.filter.file}"
+                test.config.file="${findbugs.test.exclude.filter.file}" />
+        <run-findbugs exclude.filter="${exclude.filter}"
+                output="html"
+                output.file="${findbugs.output.file.html}"/>
     </target>
 
-    <target name="findbugs" description="Run FindBugs and report by HTML.">
-        <antcall target="-run-findbugs">
-            <param name="findbugs.output" value="html" />
-            <param name="findbugs.output.file" location="${findbugs.output.file.html}" />
-        </antcall>
-    </target>
+    <target name="findbugs-xml" depends="-compile"
+            description="Run FindBugs and report by XML.">
+        <local name="exclude.filter" />
 
-    <target name="findbugs-xml" description="Run FindBugs and report by XML.">
-        <antcall target="-run-findbugs">
-            <param name="findbugs.output" value="xml" />
-            <param name="findbugs.output.file" location="${findbugs.output.file.xml}" />
-        </antcall>
+        <select-config-file destination="exclude.filter"
+                main.config.file="${findbugs.exclude.filter.file}"
+                test.config.file="${findbugs.test.exclude.filter.file}" />
+        <run-findbugs exclude.filter="${exclude.filter}"
+                output="xml"
+                output.file="${findbugs.output.file.xml}"/>
     </target>
 </project>

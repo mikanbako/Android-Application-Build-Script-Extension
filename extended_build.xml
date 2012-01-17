@@ -24,6 +24,35 @@
 
     <property file="${config.directory}/extension.properties" />
 
+    <macrodef name="select-config-file"
+            description="Select configuration file according to the project.">
+        <attribute name="destination" description="Property of destination." />
+        <attribute name="main.config.file"
+                description="Path of configuration file for main project." />
+        <attribute name="test.config.file"
+                description="Path of configuration file for test project." />
+        <sequential>
+            <fail message="Property 'project.is.test' is not set.">
+                <condition>
+                    <not>
+                        <isset property="project.is.test" />
+                    </not>
+                </condition>
+            </fail>
+
+            <if condition="${project.is.test}">
+                <then>
+                    <property name="@{destination}"
+                        location="@{test.config.file}" />
+                </then>
+                <else>
+                    <property name="@{destination}"
+                        location="@{main.config.file}" />
+                </else>
+            </if>
+        </sequential>
+    </macrodef>
+
     <target name="clean-reports" description="Remove reports directory."
             depends="all">
         <delete dir="${reports.directory}" />

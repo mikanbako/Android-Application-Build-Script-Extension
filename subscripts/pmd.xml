@@ -25,6 +25,7 @@
             location="${pmd.output.directory}/${pmd.output.filename.exclude.extension}.xml" />
 
     <macrodef name="run-pmd" description="Run PMD.">
+        <attribute name="rule.set.file" description="Path of rule set file." />
         <attribute name="format" description="Output format." />
         <attribute name="output.file" description="Path of report file." />
         <sequential>
@@ -32,7 +33,8 @@
 
             <mkdir dir="${pmd.output.directory}" />
 
-            <pmd rulesetfiles="${pmd.rule.set.file}" failonerror="true"
+            <echo message="Rule set file is @{rule.set.file}" />
+            <pmd rulesetfiles="@{rule.set.file}" failonerror="true"
                     targetjdk="${pmd.target.jdk}" encoding="${pmd.encoding}">
                 <formatter type="@{format}" toFile="@{output.file}" />
                 <fileset dir="${source.absolute.dir}">
@@ -44,11 +46,23 @@
         </sequential>
     </macrodef>
 
-    <target name="pmd" description="Run PMD and report by HTML.">
-        <run-pmd format="html" output.file="${pmd.output.file.html}" />
+    <target name="pmd" depends="-setup" description="Run PMD and report by HTML.">
+        <local name="rule.set.file" />
+
+        <select-config-file destination="rule.set.file"
+                main.config.file="${pmd.rule.set.file}"
+                test.config.file="${pmd.test.rule.set.file}" />
+        <run-pmd rule.set.file="${rule.set.file}"
+            format="html" output.file="${pmd.output.file.html}" />
     </target>
 
-    <target name="pmd-xml" description="Run PMD and report by XML.">
-        <run-pmd format="xml" output.file="${pmd.output.file.xml}" />
+    <target name="pmd-xml" depends="-setup" description="Run PMD and report by XML.">
+        <local name="rule.set.file" />
+
+        <select-config-file destination="rule.set.file"
+                main.config.file="${pmd.rule.set.file}"
+                test.config.file="${pmd.test.rule.set.file}" />
+        <run-pmd rule.set.file="${rule.set.file}"
+                format="xml" output.file="${pmd.output.file.xml}" />
     </target>
 </project>
