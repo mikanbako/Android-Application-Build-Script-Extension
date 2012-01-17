@@ -50,8 +50,8 @@
         <exclude name="ConfusingTernary" />
         <exclude name="ImmutableField" />
         <exclude name="AssignmentToNonFinalStatic" />
-        <exclude name="AvoidSynchronizedAtMethodLevel" />
         <exclude name="MissingBreakInSwitch" />
+        <exclude name="AvoidSynchronizedAtMethodLevel" />
         <exclude name="EmptyMethodInAbstractClassShouldBeAbstract" />
         <exclude name="TooFewBranchesForASwitchStatement" />
     </rule>
@@ -64,14 +64,14 @@
         <exclude name="TooManyStaticImports" />
     </rule>
 
-    <!-- JUnit Tests -->
-    <rule ref="rulesets/junit.xml">
-        <exclude name="JUnitAssertionsShouldIncludeMessage" />
-        <exclude name="JUnitTestsShouldIncludeAssert" />
-    </rule>
-
     <!-- Migration Rules -->
-    <rule ref="rulesets/migrating_to_15.xml" />
+    <rule ref="rulesets/migrating_to_15.xml">
+        <exclude name="JUnit4TestShouldUseBeforeAnnotation" />
+        <exclude name="JUnit4TestShouldUseAfterAnnotation" />
+        <exclude name="JUnit4TestShouldUseTestAnnotation" />
+        <exclude name="JUnit4SuitesShouldUseSuiteAnnotation" />
+        <exclude name="JUnitUseExpected" />
+    </rule>
 
     <!-- Naming Rules -->
     <rule ref="rulesets/naming.xml">
@@ -99,6 +99,7 @@
         <exclude name="UnusedFormalParameter" />
     </rule>
 
+    <!-- Type Resolution Rules -->
     <rule ref="rulesets/typeresolution.xml">
         <exclude name="LooseCoupling" />
     </rule>
