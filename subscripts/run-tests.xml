@@ -98,7 +98,7 @@
                 </infileset>
                 <xml outfile="${coverage.xml.output}" />
                 <html outfile="${coverage.html.output}" encoding="UTF-8" />
-           </report>
+            </report>
         </emma>
         <delete file="coverage.ec" />
         <delete file="coverage.em" />
