@@ -69,6 +69,14 @@
 
     <target name="-test-coverage-xml" depends="-get-manifest-package, -get-tested-manifest-package">
         <echo message="Run tests and measure coverage about ${test.runner} on ${manifest.package}." />
+
+        <exec executable="${adb}" failonerror="true">
+            <arg line="${adb.device.arg}" />
+            <arg value="shell" />
+            <arg value="rm" />
+            <arg value="/data/data/${tested.manifest.package}/files/coverage.ec" />
+        </exec>
+
         <exec executable="${jython.executable}" failonerror="true">
             <env key="CLASSPATH" path="${classpath.for.jython.scripts}" />
             <arg path="${run.tests.for.xml.script}" />
