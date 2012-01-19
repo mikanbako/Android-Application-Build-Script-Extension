@@ -18,9 +18,13 @@ Features :
         * Generate test result by XML format.
         * Generate coverage report by XML format.
 
+    * Improve existing target.
+
+        * Add coverage filtering.
+
 Required softwares :
 
-    * Android SDK Tools Revision 14 or higher (http://developer.android.com/)
+    * Android SDK Tools Revision 16 or higher (http://developer.android.com/)
     * Ant 1.8.0 or higher (http://ant.apache.org/)
     * Jython 2.5.x (http://www.jython.org/) for targets of test.
     * Static code analyzer package for targets for static code analyze.
@@ -30,11 +34,27 @@ First Setup :
     1. Locate this directory that names "build" at top directory of application
        project.
 
-    2. Copy the below and paste to the below of <import> task at build.xml.
+    2. Copy the below and paste to the *above* of <import> task at build.xml.
+
+        <import file="build/customized_build.xml" />
+
+    2. Copy the below and paste to the *below* of <import> task at build.xml.
 
         <import file="build/extended_build.xml" />
 
     3. Replace the value of version-tag to "custom" at build.xml.
+
+    Example:
+
+        Before :
+                <!-- version-tag: 1 -->
+                <import file="${sdk.dir}/tools/ant/build.xml" />
+
+        After :
+                <!-- version-tag: custom -->
+                <import file="build/customized_build.xml" />
+                <import file="${sdk.dir}/tools/ant/build.xml" />
+                <import file="build/extended_build.xml" />
 
 Checkstyle Setup :
 
@@ -78,14 +98,25 @@ PMD's Copy/Paste Detector (CPD) Setup :
 
 Test Setup :
 
-    1. Copy the below and paste to the below of <import> task at build.xml in the
-       test project.
+    1. Copy the below and paste to the *above* of <import> task at build.xml
+
+        <import file="${tested.project.dir}/build/customized_build.xml" />
+
+    2. Copy the below and paste to the *below* of <import> task at build.xml
+       in the test project.
 
         <import file="${tested.project.dir}/build/extended_build.xml" />
 
     2. Replace the value of version-tag to "custom" at build.xml.
 
     3. Turn true test.enable in config/extension.properties.
+
+Coverage filter Setup :
+
+    1. Modify the file of coverage.filters.file in config/extension.properties.
+       (Default is config/coverage-filters.txt)
+
+        * Generated R class will be excluded without explicit setting.
 
 Added Targets :
 

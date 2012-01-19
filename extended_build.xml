@@ -14,6 +14,8 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
+
+<!-- This file must be imported the *below* "${sdk.dir}/tools/ant/build.xml". -->
 <project name="extended_build">
     <dirname property="extended.basedir" file="${ant.file.extended_build}" />
     <property name="config.directory" location="${extended.basedir}/config" />
@@ -50,6 +52,17 @@
                         location="@{main.config.file}" />
                 </else>
             </if>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="get-manifest-package"
+            description="Get package name from AndroidManifest.xml">
+        <attribute name="manifest.file" default="AndroidManifest.xml"
+                description="Path of AndroidManifest.xml" />
+        <attribute name="destination" description="Property of destination." />
+        <sequential>
+            <xpath input="@{manifest.file}"
+                    expression="/manifest/@package" output="@{destination}" />
         </sequential>
     </macrodef>
 

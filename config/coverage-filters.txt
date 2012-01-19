@@ -1,0 +1,5 @@
+# Coverage filters.
+#
+# See http://emma.sourceforge.net/reference/ch02s06s02.html for detail.
+#
+# NOTICE: Generated R class (<package name>.R*) will be excluded.
