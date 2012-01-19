@@ -70,14 +70,16 @@
     <target name="-test-coverage-xml" depends="-get-manifest-package, -get-tested-manifest-package">
         <echo message="Run tests and measure coverage about ${test.runner} on ${manifest.package}." />
 
-        <exec executable="${adb}" failonerror="true">
+        <exec executable="${adb}" failonerror="false"
+                taskname="delete old coverage.ec on device">
             <arg line="${adb.device.arg}" />
             <arg value="shell" />
             <arg value="rm" />
             <arg value="/data/data/${tested.manifest.package}/files/coverage.ec" />
         </exec>
 
-        <exec executable="${jython.executable}" failonerror="true">
+        <exec executable="${jython.executable}" failonerror="true"
+                taskname="exec test and measure coverage">
             <env key="CLASSPATH" path="${classpath.for.jython.scripts}" />
             <arg path="${run.tests.for.xml.script}" />
             <arg value="-a" />
@@ -91,7 +93,8 @@
             <arg value="${test.runner}" />
         </exec>
 
-        <exec executable="${adb}" failonerror="true">
+        <exec executable="${adb}" failonerror="true"
+                taskname="get coverage.ec from device">
             <arg line="${adb.device.arg}" />
             <arg value="pull" />
             <arg value="/data/data/${tested.manifest.package}/files/coverage.ec" />
