@@ -35,7 +35,7 @@
 
             <echo message="Rule set file is @{rule.set.file}" />
             <pmd rulesetfiles="@{rule.set.file}" failonerror="true"
-                    targetjdk="${pmd.target.jdk}" encoding="${pmd.encoding}">
+                    targetjdk="${java.target}" encoding="${java.encoding}">
                 <formatter type="@{format}" toFile="@{output.file}" />
                 <fileset dir="${source.absolute.dir}">
                     <include name="**/*.java" />
