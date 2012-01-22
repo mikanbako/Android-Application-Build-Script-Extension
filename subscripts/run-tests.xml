@@ -31,22 +31,21 @@
     <property name="classpath.for.jython.scripts"
             value="${sdk.dir}/tools/lib/ddmlib.jar" />
 
-
     <target name="-make-test-result-directory">
         <mkdir dir="${reports.directory}"/>
     </target>
 
     <target name="-get-manifest-package">
-        <xpath input="AndroidManifest.xml"
-                expression="/manifest/@package" output="manifest.package" />
+        <get-manifest-package destination="manifest.package" />
     </target>
 
     <target name="-get-tested-manifest-package">
         <local name="tested.project.manifest.file" />
         <property name="tested.project.manifest.file"
                 location="${tested.project.dir}/AndroidManifest.xml" />
-        <xpath input="${tested.project.manifest.file}"
-                expression="/manifest/@package" output="tested.manifest.package" />
+
+        <get-manifest-package manifest.file="${tested.project.manifest.file}"
+                destination="tested.manifest.package" />
     </target>
 
     <target name="-test-xml"
@@ -101,7 +100,7 @@
                 </infileset>
                 <xml outfile="${coverage.xml.output}" />
                 <html outfile="${coverage.html.output}" encoding="UTF-8" />
-           </report>
+            </report>
         </emma>
         <delete file="coverage.ec" />
         <delete file="coverage.em" />
