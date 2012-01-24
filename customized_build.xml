@@ -27,7 +27,8 @@
             <local name="manifest.package" />
 
             <get-manifest-package destination="manifest.package" />
-            <property name="@{destination}" value="${manifest.package}.R*" />
+            <property name="@{destination}"
+                    value="${manifest.package}.R,${manifest.package}.R$$*" />
         </sequential>
     </macrodef>
 
@@ -96,7 +97,7 @@
                     <local name="r-class-exclusion-filter" />
                     <create-r-class-exclusion-filter
                             destination="r-class-exclusion-filter" />
-                    <echo message="${r-class-exclusion-filter} is excluded from instrumenting." />
+                    <echo message="${r-class-exclusion-filter} are excluded from instrumenting." />
                     <echo message="Additional coverage filter is ${coverage.filters.file}" />
 
                     <!-- It only instruments class files, not any external libs -->
