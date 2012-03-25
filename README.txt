@@ -24,7 +24,7 @@ Features :
 
 Required softwares :
 
-    * Android SDK Tools Revision 16 or higher (http://developer.android.com/)
+    * Android SDK Tools Revision 16 (http://developer.android.com/)
     * Ant 1.8.0 or higher (http://ant.apache.org/)
     * Jython 2.5.x (http://www.jython.org/) for targets of test.
     * Static code analyzer package for targets for static code analyze.
