@@ -99,5 +99,6 @@
     <!-- Type Resolution Rules -->
     <rule ref="rulesets/typeresolution.xml">
         <exclude name="LooseCoupling" />
+        <exclude name="SignatureDeclareThrowsException" />
     </rule>
 </ruleset>
