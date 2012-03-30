@@ -21,9 +21,9 @@
 # contain ddmlib.jar provided by Android SDK.
 #
 # Android emulator must launched or device must be connected.
-#
-# Usage :
 
+# Usage :
+#
 #   1. Set path of ddmlib.jar to CLASSPATH environment variable. For example :
 #
 #     export CLASSPATH=<ANDROID_SDK_HOME>/tools/lib/ddmlib.jar
