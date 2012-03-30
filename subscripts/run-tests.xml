@@ -28,8 +28,11 @@
 
     <property name="run.tests.for.xml.script"
             location="${subscripts.directory}/run_tests_for_xml.py" />
-    <property name="classpath.for.jython.scripts"
+    <property name="classpath.for.ddmlib"
             value="${sdk.dir}/tools/lib/ddmlib.jar" />
+
+    <property name="verify.test.xml.result.script"
+            location="${subscripts.directory}/verify_test_xml_result.py" />
 
     <target name="-make-test-result-directory">
         <mkdir dir="${reports.directory}"/>
@@ -52,7 +55,7 @@
             depends="-get-manifest-package">
         <echo message="Test ${test.runner} on ${manifest.package}." />
         <exec executable="${jython.executable}" failonerror="true">
-            <env key="CLASSPATH" path="${classpath.for.jython.scripts}" />
+            <env key="CLASSPATH" path="${classpath.for.ddmlib}" />
             <arg path="${run.tests.for.xml.script}" />
             <arg value="-a" />
             <arg path="${adb}" />
@@ -71,7 +74,7 @@
 
         <exec executable="${jython.executable}" failonerror="true"
                 taskname="exec test and measure coverage">
-            <env key="CLASSPATH" path="${classpath.for.jython.scripts}" />
+            <env key="CLASSPATH" path="${classpath.for.ddmlib}" />
             <arg path="${run.tests.for.xml.script}" />
             <arg value="-a" />
             <arg path="${adb}" />
@@ -110,7 +113,7 @@
 
     <target name="test-xml"
             depends="-test-project-check, -make-test-result-directory"
-            description="Run tests and generate XML report.">
+            description="Run tests and generate JUnit XML report.">
         <if condition="${emma.enabled}">
             <then>
                 <antcall target="-test-coverage-xml" />
@@ -119,5 +122,23 @@
                 <antcall target="-test-xml" />
             </else>
         </if>
+    </target>
+
+    <target name="verify-test-result"
+            depends="-test-project-check"
+            description="Check the JUnit XML report. And fail this build if the test is failure.">
+        <fail message="JUnit XML file (${test.result.xml.output}) is not found."
+                taskname="check XML report is available">
+            <condition>
+                <not>
+                    <available file="${test.result.xml.output}" />
+                </not>
+            </condition>
+        </fail>
+        <exec executable="${jython.executable}" failonerror="true"
+                taskname="verify test result">
+            <arg path="${verify.test.xml.result.script}" />
+            <arg path="${test.result.xml.output}" />
+        </exec>
     </target>
 </project>

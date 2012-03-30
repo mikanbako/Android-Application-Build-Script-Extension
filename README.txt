@@ -16,12 +16,13 @@ Features :
     * Add targets for tests.
 
         * Generate test result by XML format.
+        * Verify test result from generated XML report.
         * Generate coverage report by XML format.
 
 Required softwares :
 
-    * Android SDK Tools Revision 17 or higher (http://developer.android.com/)
-    * Ant 1.8.0 or higher (http://ant.apache.org/)
+    * Android SDK Tools Revision 17 or above (http://developer.android.com/)
+    * Ant 1.8.0 or above (http://ant.apache.org/)
     * Jython 2.5.x (http://www.jython.org/) for targets of test.
     * Static code analyzer package for targets for static code analyze.
 
@@ -189,6 +190,8 @@ Added Targets :
 
         These targets must be ran on test project.
 
+        NOTICE : These targets use Jython.
+
         test-xml : Run tests and generate report by XML.
 
             * Test results report to "reports/test_result.xml" in test project.
@@ -196,6 +199,13 @@ Added Targets :
             * Coverage report to "reports/coverage.html" and
               "reports/coverage.xml" in test project when you run text-xml
               target with emma target.
+
+        verify-test-result : Check the JUnit XML report. And fail this build
+                             if the test is failure.
+
+            * This target needs the test results report from test-xml target.
+
+            * If the test is successful, this target does not anything.
 
         Example :
 
@@ -207,6 +217,11 @@ Added Targets :
             ant debug install test-xml
                 Build test and tested application, install the both application,
                 run tests and generate XML of test result.
+
+            ant debug install test-xml verify-test-result
+                Build test and tested application, install the both application,
+                run tests and generate XML of test result. If the test failed,
+                the build will be failure.
 
             ant emma debug install test-xml
                 Build test and tested application, install the both application,
