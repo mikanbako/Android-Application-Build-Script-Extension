@@ -21,9 +21,9 @@
 # contain ddmlib.jar provided by Android SDK.
 #
 # Android emulator must launched or device must be connected.
-#
-# Usage :
 
+# Usage :
+#
 #   1. Set path of ddmlib.jar to CLASSPATH environment variable. For example :
 #
 #     export CLASSPATH=<ANDROID_SDK_HOME>/tools/lib/ddmlib.jar
@@ -101,18 +101,24 @@ def get_device(serial_number, debug_bridge):
         An instance of com.android.ddmlib.IDevice. None if the debug bridge
         does not connect to any devices.
     '''
+    # Get connecting devices.
     devices = debug_bridge.getDevices()
 
+    # If devices are not found.
     if not devices:
         return None
 
+    # Select one from devices.
     if serial_number:
+        # If serial number is specified, find its device.
         for d in devices:
             if d.getSerialNumber() == serial_number:
                 return d
         else:
+            # A device of the serial number is not found.
             return None
     else:
+        # Otherwise the default device is selected.
         return devices[0]
 
 class TestResultXmlFormatter(ITestRunListener):
@@ -133,39 +139,52 @@ class TestResultXmlFormatter(ITestRunListener):
         Parameters :
             device_properties : Properties of the device.
         '''
+        # Create a tree.
         self.__tree = ElementTree(Element(u'testsuite'))
         self.__test_suite_element = self.__tree.getroot()
+
+        # Create a properties element.
         self.__device_properties = device_properties
         self.create_properties_element(self.__test_suite_element)
 
     def create_properties_element(self, parent_element):
         u'''
-        Create properties element.
+        Create a properties element.
 
         Parameters :
             parent_element : Element of parent of properties element.
         '''
+        # Create a properties element.
         properties = SubElement(self.__tree.getroot(), u'properties')
+
+        # Create a property elements.
         for entry in self.__device_properties.entrySet():
             SubElement(properties, u'property', {entry.key: entry.value})
 
     def testRunStarted(self, runName, testCount):
+        # Set attributes of the testsuite element.
         self.__test_suite_element.attrib[u'name'] = runName
         self.__test_suite_element.attrib[u'hostname'] = \
             self.__device_properties[self.PROPERTY_KEY_HOST_NAME]
         self.__test_suite_element.attrib[u'tests'] = unicode(testCount)
         now = datetime.now()
         self.__test_suite_element.attrib[u'timestamp'] = now.isoformat()
+
+        # Initialize counters.
         self.__failed_test_count = 0
         self.__error_test_count = 0
 
     def testStarted(self, test):
+        # Create a testcase element.
         self.__current_testcase_element = SubElement(
             self.__test_suite_element, u'testcase',
             {u'classname': test.getClassName(), u'name': test.getTestName()});
+
+        # Record the test started time.
         self.__current_test_started_time = datetime.now()
 
     def testFailed(self, status, test, trace):
+        # Judge the kind of this failure.
         if status == ITestRunListener.TestFailure.FAILURE:
             tag = u'failure'
             self.__failed_test_count += 1
@@ -173,26 +192,36 @@ class TestResultXmlFormatter(ITestRunListener):
             tag = u'error'
             self.__error_test_count += 1
 
+        # Create a failure or a error element.
+
         failed_element = SubElement(self.__current_testcase_element, tag)
+
+        # Parse the error type and message.
         match = self.PATTERN_TRACE_FIRST_LINE.match(trace.splitlines(False)[0])
         if match:
             failed_element.attrib[u'type'] = match.group(u'type')
             message = match.group(u'message')
             if message:
                 failed_element.attrib[u'message'] = message
+
         failed_element.text = trace
 
     def testEnded(self, test, testMetrics):
+        # Record the elapsed time.
         elapsed_time = datetime.now() - self.__current_test_started_time
+
+        # Set the time attribute to the elapsed time.
         self.__current_testcase_element.set(u'time',
             u'%d.%d' % (elapsed_time.days * 60 * 60 + elapsed_time.seconds,
                 elapsed_time.microseconds))
 
     def testRunFailed(self, errorMessage):
+        # Create a system-error element.
         system_err_element = SubElement(self.__test_suite_element, u'system-err')
         system_err_element.text = errorMessage
 
     def testRunEnded(self, elapsedTime, testMetrics):
+        # Set attributes of the testsute.
         self.__test_suite_element.attrib[u'time'] = unicode(float(elapsedTime) / 1000)
         self.__test_suite_element.attrib[u'errors'] = unicode(self.__error_test_count)
         self.__test_suite_element.attrib[u'failures'] = unicode(self.__failed_test_count)
@@ -245,28 +274,28 @@ def run_tests(adb_location, serial_number,
     '''
     AndroidDebugBridge.init(False)
 
+    # Connect to Android debug bridge.
     connecting_event = DeviceConnectingEvent(serial_number)
     AndroidDebugBridge.addDeviceChangeListener(connecting_event)
-
     debug_bridge = AndroidDebugBridge.createBridge(adb_location, False)
-    connecting_event.wait()
 
+    # Wait until device is connected.
+    connecting_event.wait()
     if not debug_bridge.isConnected():
         print >>sys.stderr, u'bridge is not connected.'
         return None
 
+    # Get the device.
     device = get_device(serial_number, debug_bridge)
-
     if not device:
         print >>sys.stderr, u'There is not device.'
         return None
 
+    # Run the test runner on the device.
     test_runner = RemoteAndroidTestRunner(package_name, test_runner_name, device)
     test_runner.setCoverage(enable_coverage)
-
     formatter = TestResultXmlFormatter(device.getProperties())
     test_runner.run(formatter)
-
     return formatter.get_result()
 
 def output_result(result, file):
@@ -277,18 +306,19 @@ def output_result(result, file):
         result : An ElementTree object.
         file : File to output result.
     '''
+    # Generate XML.
     output = StringIO()
-
     result.write(output, XML_ENCODING)
-
     outputted_xml = PATTERN_XML_INSERTING_NEW_LINE.sub(
         REPLACEMENT_XML_INSERTING_NEW_LINE, output.getvalue())
     output.close()
 
+    # Output to the file.
     file_output = codecs.getwriter(XML_ENCODING)(file)
     print >>file_output, outputted_xml
 
 def main():
+    # Create OptionParser.
     parser = OptionParser(usage=u'usage: %prog -a ADB -s SERIAL [--coverage] [-o FILE] test_package_name [test_runner]')
     parser.add_option('-a', '--adb', metavar='ADB', dest='adb_location',
         help='Location of adb. (required)')
@@ -300,6 +330,8 @@ def main():
         default=False, help='Measure coverage while tests are running.')
     parser.add_option('-o', '--output', metavar='FILE', dest='output',
         help='File path of output. If this option is not specified, this script outputs to standard output.')
+
+    # Parse command line arguments.
 
     (options, args) = parser.parse_args()
 
@@ -333,8 +365,14 @@ def main():
     else:
         output_file = sys.stdout
 
+    # Run tests.
+
     result = run_tests(options.adb_location, serial_number,
         package_name, test_runner, options.coverage)
+
+    # If test is finished, output result.
+    # Otherwise test running is failed.
+
     if result:
         output_result(result, output_file)
         status = 0
