@@ -102,8 +102,6 @@ PMD's Copy/Paste Detector (CPD)用の設定
 
 テスト用の設定：
 
-Test Setup :
-
     1. テストプロジェクトのbuild.xmlを開き、<import>タスクの「下に」以下の内容を
        コピーアンドペーストしてください。
 
@@ -189,6 +187,7 @@ Test Setup :
 
            ・テスト結果を、テストプロジェクトの「reports/test_result.xml」として
              出力します。
+
            ・emmaターゲットを同時に指定した場合、「reports/coverage.html」と
              「reports/coverage.xml」としてカバレッジレポートを出力します。
 
