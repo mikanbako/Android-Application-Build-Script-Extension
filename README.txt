@@ -15,16 +15,16 @@ Features :
 
     * Add targets for tests.
 
-        * Generate test result by XML format.
-        * Verify test result from generated XML report.
-        * Generate coverage report by XML format.
+        * You can generate test result by JUnit XML format.
+        * You can verify test result from generated JUnit XML report.
+        * You can generate coverage report by XML format.
 
 Required softwares :
 
     * Android SDK Tools Revision 17 or above (http://developer.android.com/)
     * Ant 1.8.0 or above (http://ant.apache.org/)
-    * Jython 2.5.x (http://www.jython.org/) for targets of test.
-    * Static code analyzer package for targets for static code analyze.
+    * Jython 2.5.x (http://www.jython.org/) if you run targets of test.
+    * Static code analyzing tools if you run targets of static code analyze.
 
 Removed feature from sdk_r16 :
 
@@ -34,14 +34,14 @@ Removed feature from sdk_r16 :
 
 First Setup :
 
-    1. Locate this directory that names "build" at top directory of application
-       project.
+    1. Put these scripts and sub directories in a directory that names
+       "build" at top directory of application project.
 
     2. Copy the below and paste to the *below* of <import> task at build.xml.
 
         <import file="build/extended_build.xml" />
 
-    3. Replace the value of version-tag to "custom" at build.xml.
+    3. Change the value of version-tag to "custom" in build.xml.
 
     Example:
 
@@ -56,43 +56,53 @@ First Setup :
 
 Checkstyle Setup :
 
-    1. Locate checkstyle-x.x-all.jar to one of library directory of Ant.
+    1. Put checkstyle-x.x-all.jar in one of library directory of Ant.
 
-    2. Turn true checkstyle.enable in config/extension.properties.
+    2. Change the value of checkstyle.enable to true in
+       config/extension.properties.
 
-    3. Modify or replace config/checkstyle-config.xml to your configuration
-       if you need that.
+    3. Modify or replace config/checkstyle-config.xml to your Checkstyle
+       configuration if you need that.
 
 FindBugs Setup :
 
     1. Install FindBugs to externals/findbugs or other directory.
 
-    2. Locate findbugs-ant.jar to one of library directory of Ant.
+    2. Put findbugs-ant.jar in one of library directory of Ant.
 
-    3. Turn true findbugs.enable in config/extension.properties.
+    3. Change the value of findbugs.enable to true in
+       config/extension.properties.
 
-    4. Modify findbugs.home to directory installed FindBugs if you need.
+    4. Modify findbugs.home in config/extension.properties to directory
+       installed FindBugs if you need that.
+
+    5. Modify or replace config/findbugs-exclude-filter.xml to your FindBugs
+       exclude filter if you need that.
 
 JavaNCSS Setup :
 
-    1. Locate jars in lib directory of JavaNCSS distribution to one of library
+    1. Put jars in lib directory of JavaNCSS distribution in one of library
        directory of Ant.
 
-    2. Turn true javancss.enable in config/extension.properties.
+    2. Change  true javancss.enable in config/extension.properties.
 
 PMD Setup :
 
-    1. Locate jars in lib directory of PMD distribution to one of library
+    1. Put jars in lib directory of PMD distribution in one of library
        directory of Ant.
 
-    2. Turn true pmd.enable in config/extension.properties.
+    2. Change the value of pmd.enable to true in config/extension.properties.
+
+    3. Modify or replace config/pmd-rule-set.xml (for main code) and
+       config/pmd-test-rule-set.xml (for test code) to your PMD ruleset
+       if you need that.
 
 PMD's Copy/Paste Detector (CPD) Setup :
 
-    1. Locate jars in lib directory of PMD distribution to one of library
+    1. Put jars in lib directory of PMD distribution in one of library
        directory of Ant.
 
-    2. Turn true pmd.cpd.enable in config/extension.properties.
+    2. Change the value of pmd.cpd.enable to true in config/extension.properties.
 
 Test Setup :
 
@@ -103,7 +113,7 @@ Test Setup :
 
     2. Replace the value of version-tag to "custom" at build.xml.
 
-    3. Turn true test.enable in config/extension.properties.
+    3. Change the value of test.enable to true in config/extension.properties.
 
 Added Targets :
 
@@ -120,9 +130,6 @@ Added Targets :
             ant checkstyle
                 Run Checkstyle and report by text on project executing Ant.
 
-            NOTICE : If you located checkstyle-x.x-all.jar to other directory,
-                     you must specify path of it by -lib option of Ant.
-
     After "FindBugs Setup" :
 
         findbugs : Run FindBugs and report by HTML to "reports/findbugs.html".
@@ -133,9 +140,6 @@ Added Targets :
 
             ant findbugs
                 Run FindBugs and report by HTML on project executing Ant.
-
-            NOTICE : If you located findbugs-ant.jar to other directory,
-                     you must specify path of it by -lib option of Ant.
 
     After "JavaNCSS Setup" :
 
@@ -150,9 +154,6 @@ Added Targets :
             ant javancss
                 Run JavaNCSS and report by text on project executing Ant.
 
-            NOTICE : If you located jars of JavaNCSS to other directory,
-                     you must specify path of it by -lib option of Ant.
-
     After "PMD Setup" :
 
         pmd : Run PMD and report by HTML to
@@ -165,9 +166,6 @@ Added Targets :
 
             ant pmd
                 Run PMD and report by HTML on project executing Ant.
-
-            NOTICE : If you located jars of PMD to other directory,
-                     you must specify path of it by -lib option of Ant.
 
     After "PMD's Copy/Paste Detector (CPD) Setup" :
 
@@ -183,16 +181,12 @@ Added Targets :
                 Run PMD's Copy/Paste Detector and report by text on project
                 executing Ant.
 
-            NOTICE : If you located jars of PMD to other directory,
-                     you must specify path of it by -lib option of Ant.
-
     After "Test Setup" :
 
-        These targets must be ran on test project.
+        NOTICE : Below targets must be ran on test project and they use Jython.
 
-        NOTICE : These targets use Jython.
-
-        test-xml : Run tests and generate report by XML.
+        test-xml : Run tests and generate report by XML formatted by JUnit XML
+                   format.
 
             * Test results report to "reports/test_result.xml" in test project.
 
@@ -210,23 +204,24 @@ Added Targets :
         Example :
 
             ant test-xml
-                Run tests and generate XML of test result.
-                The tested and test application must be installed before
-                this target is ran.
+                Run tests and generate report formatted by JUnit XML.
+                The tested application and test application must be installed
+                to the device before this target is ran.
 
             ant debug install test-xml
-                Build test and tested application, install the both application,
-                run tests and generate XML of test result.
+                Build test application and tested application, install
+                the both application to the device, run tests and generate
+                report formatted by JUnit XML.
 
             ant debug install test-xml verify-test-result
                 Build test and tested application, install the both application,
-                run tests and generate XML of test result. If the test failed,
-                the build will be failure.
+                run tests and generate report formatted by JUnit XML.
+                If the test failed, the build of Ant will be failure.
 
             ant emma debug install test-xml
                 Build test and tested application, install the both application,
-                run tests and generate XML of test result and HTML / XML of
-                coverage reports.
+                run tests and generate report formatted by JUnit XML and
+                HTML / XML of coverage reports.
 
         Configurable property :
 
