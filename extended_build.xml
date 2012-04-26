@@ -26,6 +26,15 @@
 
     <property file="${config.directory}/extension.properties" />
 
+    <!-- Override targets. -->
+
+    <target name="-pre-clean" depends="-clean-reports" />
+
+    <!-- Import build.xml in SDK. -->
+    <import file="${sdk.dir}/tools/ant/build.xml" />
+
+    <!-- Add extended targets. -->
+
     <macrodef name="select-config-file"
             description="Select configuration file according to the project.">
         <attribute name="destination" description="Property of destination." />
@@ -66,23 +75,20 @@
         </sequential>
     </macrodef>
 
-    <target name="clean-reports" description="Remove reports directory."
-            depends="all">
+    <target name="-clean-reports" depends="all">
         <delete dir="${reports.directory}" />
 
+        <!-- If this project is test, clean reports directory of tested
+             project. This behavior is same of clean target. -->
         <if condition="${project.is.test}">
             <then>
                 <local name="tested.project.absolute.directory" />
                 <property name="tested.project.absolute.directory"
                         location="${tested.project.dir}"/>
                 <ant dir="${tested.project.absolute.directory}"
-                        target="clean-reports" inheritAll="false" />
+                        target="-clean-reports" inheritAll="false" />
             </then>
         </if>
-    </target>
-
-    <target name="clean-all" description="Call clean and clean-reports."
-            depends="all, clean, clean-reports">
     </target>
 
     <if condition="${checkstyle.enable}">

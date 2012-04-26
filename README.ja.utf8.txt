@@ -37,7 +37,7 @@ sdk_r16ブランチから削除された機能：
     1. アプリケーションプロジェクトのトップディレクトリに、buildと名付けたディレクトリを作り、
        その中にこれらスクリプト、サブディレクトリを入れてください。
 
-    2. build.xmlを開き、<import>タスクの「下に」以下の内容をコピーアンドペーストしてください。
+    2. build.xmlを開き、<import>タスクを以下の内容に置き換えてください。
 
         <import file="build/extended_build.xml" />
 
@@ -51,7 +51,6 @@ sdk_r16ブランチから削除された機能：
 
         変更後：
                 <!-- version-tag: custom -->
-                <import file="${sdk.dir}/tools/ant/build.xml" />
                 <import file="build/extended_build.xml" />
 
 Checkstyle用の設定：
@@ -102,8 +101,7 @@ PMD's Copy/Paste Detector (CPD)用の設定
 
 テスト用の設定：
 
-    1. テストプロジェクトのbuild.xmlを開き、<import>タスクの「下に」以下の内容を
-       コピーアンドペーストしてください。
+    1. テストプロジェクトのbuild.xmlを開き、<import>タスクを以下の内容に置き換えてください。
 
         <import file="${tested.project.dir}/build/extended_build.xml" />
 
