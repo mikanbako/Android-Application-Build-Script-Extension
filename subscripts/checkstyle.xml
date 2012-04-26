@@ -41,6 +41,7 @@
                     <include name="**/*.java" />
                 </fileset>
 
+                <!-- Output the report to the standard output and the file. -->
                 <cs:formatter type="plain" />
                 <cs:formatter type="@{formatter.type}"
                         toFile="@{formatter.toFile}" />
