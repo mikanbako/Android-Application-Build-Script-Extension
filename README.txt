@@ -37,7 +37,7 @@ First Setup :
     1. Put these scripts and sub directories in a directory that names
        "build" at top directory of application project.
 
-    2. Copy the below and paste to the *below* of <import> task at build.xml.
+    2. Replace <import> task at build.xml by the below.
 
         <import file="build/extended_build.xml" />
 
@@ -51,7 +51,6 @@ First Setup :
 
         After :
                 <!-- version-tag: custom -->
-                <import file="${sdk.dir}/tools/ant/build.xml" />
                 <import file="build/extended_build.xml" />
 
 Checkstyle Setup :
@@ -106,8 +105,7 @@ PMD's Copy/Paste Detector (CPD) Setup :
 
 Test Setup :
 
-    1. Copy the below and paste to the *below* of <import> task at build.xml
-       in the test project.
+    1. Replace <import> task at build.xml by the below in the test project.
 
         <import file="${tested.project.dir}/build/extended_build.xml" />
 
