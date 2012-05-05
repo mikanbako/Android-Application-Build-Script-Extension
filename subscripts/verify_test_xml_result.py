@@ -95,7 +95,7 @@ def main():
     if os.path.exists(raw_path):
         junit_xml_file_path = os.path.abspath(raw_path)
     else:
-        print >>sys.stderr, u'%s is not fould.' % (raw_path)
+        print >>sys.stderr, u'%s is not found.' % (raw_path)
         parser.print_help()
         sys.exit(1)
 
