@@ -22,7 +22,6 @@
     <property name="externals.directory" location="${extended.basedir}/externals" />
     <property name="subscripts.directory" location="${extended.basedir}/subscripts" />
     <property name="reports.directory" location="${basedir}/reports" />
-    <property name="jython.executable" value="jython" />
 
     <property file="${config.directory}/extension.properties" />
 

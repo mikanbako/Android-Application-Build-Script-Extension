@@ -104,7 +104,10 @@ def main():
         if is_test_successful(junit_xml_file_path):
             sys.exit()
         else:
-            sys.exit("Test is failure.")
+            # sys.exit([arg]) on Jython 2.5.0 attached to Android SDK ignores
+            # string type argument.
+            print >>sys.stderr, u"Test is failure."
+            sys.exit(1)
     except IOError, e:
         sys.exit(e.message)
     except xml.parsers.expat.ExpatError, e:

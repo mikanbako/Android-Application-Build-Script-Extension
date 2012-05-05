@@ -22,7 +22,6 @@ Android SDK Toolsから生成されるビルドスクリプト（build.xml）を
 
     ・Android SDK Tools Revision 17以上 (http://developer.android.com/)
     ・Ant 1.8.0以上 (http://ant.apache.org/)
-    ・テスト用のターゲットを実行する場合、Jython 2.5.x (http://www.jython.org/)
     ・静的コード解析用のターゲットを実行する場合は、その静的コード解析ツール。
 
 sdk_r16ブランチから削除された機能：
@@ -179,8 +178,6 @@ PMD's Copy/Paste Detector (CPD)用の設定
 
     「テスト用の設定」のあと：
 
-        以下のターゲットはテストプロジェクト専用で、Jythonを使用します。
-
         test-xml : テストを実行し、結果のレポートをJUnit XML形式で生成します。
 
            ・テスト結果を、テストプロジェクトの「reports/test_result.xml」として
@@ -219,8 +216,3 @@ PMD's Copy/Paste Detector (CPD)用の設定
                 デバイスにインストールした後、テストを実行してテスト結果のレポートを
                 JUnit XML形式で生成します。またHTML形式とXML形式でカバレッジレポートを
                 生成します。
-
-        設定可能プロパティ：
-
-            jython.executable : Jythonを実行するためのコマンド（コマンドライン引数なし）。
-                                標準値は「jython」。
