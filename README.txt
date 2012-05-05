@@ -23,7 +23,6 @@ Required softwares :
 
     * Android SDK Tools Revision 17 or above (http://developer.android.com/)
     * Ant 1.8.0 or above (http://ant.apache.org/)
-    * Jython 2.5.x (http://www.jython.org/) if you run targets of test.
     * Static code analyzing tools if you run targets of static code analyze.
 
 Removed feature from sdk_r16 :
@@ -181,8 +180,6 @@ Added Targets :
 
     After "Test Setup" :
 
-        NOTICE : Below targets must be ran on test project and they use Jython.
-
         test-xml : Run tests and generate report by XML formatted by JUnit XML
                    format.
 
@@ -220,9 +217,3 @@ Added Targets :
                 Build test and tested application, install the both application,
                 run tests and generate report formatted by JUnit XML and
                 HTML / XML of coverage reports.
-
-        Configurable property :
-
-            jython.executable : The command to execute Jython without any
-                                command line arguments. Default value is
-                                "jython".

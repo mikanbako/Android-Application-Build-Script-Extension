@@ -26,10 +26,13 @@
     <property name="coverage.html.output"
             location="${reports.directory}/coverage.html" />
 
+    <property name="jython.class" value="org.python.util.jython" />
+    <property name="jython.jar" location="${sdk.dir}/tools/lib/jython.jar" />
+    <property name="ddmlib.jar"
+            value="${sdk.dir}/tools/lib/ddmlib.jar" />
+
     <property name="run.tests.for.xml.script"
             location="${subscripts.directory}/run_tests_for_xml.py" />
-    <property name="classpath.for.ddmlib"
-            value="${sdk.dir}/tools/lib/ddmlib.jar" />
 
     <property name="verify.test.xml.result.script"
             location="${subscripts.directory}/verify_test_xml_result.py" />
@@ -51,42 +54,54 @@
                 destination="tested.manifest.package" />
     </target>
 
+    <macrodef name="run-tests-for-xml"
+            description="Run script that tests for XML.">
+        <element name="args" description="Arguments of the script." />
+        <sequential>
+            <java classname="${jython.class}" failonerror="true">
+                <classpath>
+                    <pathelement path="${jython.jar}" />
+                    <pathelement path="${ddmlib.jar}" />
+                </classpath>
+                <arg path="${run.tests.for.xml.script}" />
+                <args />
+            </java>
+        </sequential>
+    </macrodef>
+
     <target name="-test-xml"
             depends="-get-manifest-package">
         <echo message="Test ${test.runner} on ${manifest.package}." />
-        <exec executable="${jython.executable}" failonerror="true">
-            <env key="CLASSPATH" path="${classpath.for.ddmlib}" />
-            <arg path="${run.tests.for.xml.script}" />
-            <arg value="-a" />
-            <arg path="${adb}" />
-            <arg value="-b" />
-            <arg value="${adb.device.arg}" />
-            <arg value="-o" />
-            <arg value="${test.result.xml.output}" />
-            <arg value="${manifest.package}" />
-            <arg value="${test.runner}" />
-        </exec>
+        <run-tests-for-xml>
+            <args>
+                <arg value="-a" />
+                <arg path="${adb}" />
+                <arg value="-b" />
+                <arg value="${adb.device.arg}" />
+                <arg value="-o" />
+                <arg value="${test.result.xml.output}" />
+                <arg value="${manifest.package}" />
+                <arg value="${test.runner}" />
+            </args>
+        </run-tests-for-xml>
         <echo message="XML of test result is outputted to ${test.result.xml.output}" />
     </target>
 
     <target name="-test-coverage-xml" depends="-get-manifest-package, -get-tested-manifest-package">
         <echo message="Run tests and measure coverage about ${test.runner} on ${manifest.package}." />
-
-        <exec executable="${jython.executable}" failonerror="true"
-                taskname="exec test and measure coverage">
-            <env key="CLASSPATH" path="${classpath.for.ddmlib}" />
-            <arg path="${run.tests.for.xml.script}" />
-            <arg value="-a" />
-            <arg path="${adb}" />
-            <arg value="-b" />
-            <arg value="${adb.device.arg}" />
-            <arg value="-o" />
-            <arg value="${test.result.xml.output}" />
-            <arg value="--coverage" />
-            <arg value="${manifest.package}" />
-            <arg value="${test.runner}" />
-        </exec>
-
+        <run-tests-for-xml>
+            <args>
+                <arg value="-a" />
+                <arg path="${adb}" />
+                <arg value="-b" />
+                <arg value="${adb.device.arg}" />
+                <arg value="-o" />
+                <arg value="${test.result.xml.output}" />
+                <arg value="--coverage" />
+                <arg value="${manifest.package}" />
+                <arg value="${test.runner}" />
+            </args>
+        </run-tests-for-xml>
         <exec executable="${adb}" failonerror="true"
                 taskname="get coverage.ec from device">
             <arg line="${adb.device.arg}" />
@@ -124,6 +139,21 @@
         </if>
     </target>
 
+    <macrodef name="verify-test-xml-result"
+            description="Run script that verifies XML of test result.">
+        <attribute name="test.result.xml"
+            description="Path of XML of test reuslt." />
+        <sequential>
+            <java classname="${jython.class}" failonerror="true">
+                <classpath>
+                    <pathelement path="${jython.jar}" />
+                </classpath>
+                <arg path="${verify.test.xml.result.script}" />
+                <arg path="@{test.result.xml}" />
+            </java>
+        </sequential>
+    </macrodef>
+
     <target name="verify-test-result"
             depends="-test-project-check"
             description="Check the JUnit XML report. And fail this build if the test is failure.">
@@ -135,10 +165,7 @@
                 </not>
             </condition>
         </fail>
-        <exec executable="${jython.executable}" failonerror="true"
-                taskname="verify test result">
-            <arg path="${verify.test.xml.result.script}" />
-            <arg path="${test.result.xml.output}" />
-        </exec>
+
+        <verify-test-xml-result test.result.xml="${test.result.xml.output}" />
     </target>
 </project>

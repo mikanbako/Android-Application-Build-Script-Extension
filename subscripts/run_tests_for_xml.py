@@ -274,29 +274,35 @@ def run_tests(adb_location, serial_number,
     '''
     AndroidDebugBridge.init(False)
 
-    # Connect to Android debug bridge.
-    connecting_event = DeviceConnectingEvent(serial_number)
-    AndroidDebugBridge.addDeviceChangeListener(connecting_event)
-    debug_bridge = AndroidDebugBridge.createBridge(adb_location, False)
+    try:
+        # Connect to Android debug bridge.
+        connecting_event = DeviceConnectingEvent(serial_number)
+        AndroidDebugBridge.addDeviceChangeListener(connecting_event)
+        debug_bridge = AndroidDebugBridge.createBridge(adb_location, False)
 
-    # Wait until device is connected.
-    connecting_event.wait()
-    if not debug_bridge.isConnected():
-        print >>sys.stderr, u'bridge is not connected.'
-        return None
+        # Wait until device is connected.
+        connecting_event.wait()
+        if not debug_bridge.isConnected():
+            print >>sys.stderr, u'bridge is not connected.'
+            return None
 
-    # Get the device.
-    device = get_device(serial_number, debug_bridge)
-    if not device:
-        print >>sys.stderr, u'There is not device.'
-        return None
+        # Get the device.
+        device = get_device(serial_number, debug_bridge)
+        if not device:
+            print >>sys.stderr, u'There is not device.'
+            return None
 
-    # Run the test runner on the device.
-    test_runner = RemoteAndroidTestRunner(package_name, test_runner_name, device)
-    test_runner.setCoverage(enable_coverage)
-    formatter = TestResultXmlFormatter(device.getProperties())
-    test_runner.run(formatter)
-    return formatter.get_result()
+        # Run the test runner on the device.
+        test_runner = RemoteAndroidTestRunner(
+            package_name, test_runner_name, device)
+        test_runner.setCoverage(enable_coverage)
+        formatter = TestResultXmlFormatter(device.getProperties())
+        test_runner.run([formatter])
+
+        return formatter.get_result()
+    finally:
+        # Disconnect from Android debug bridge.
+        AndroidDebugBridge.terminate()
 
 def output_result(result, file):
     u'''
@@ -382,6 +388,7 @@ def main():
 
     if output_file != sys.stdout:
         output_file.close()
+
     sys.exit(status)
 
 if __name__ == '__main__':
