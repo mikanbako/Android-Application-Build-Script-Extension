@@ -147,12 +147,9 @@ class TestResultXmlFormatter(ITestRunListener):
         self.__device_properties = device_properties
         self.create_properties_element(self.__test_suite_element)
 
-    def create_properties_element(self, parent_element):
+    def create_properties_element(self):
         u'''
         Create a properties element.
-
-        Parameters :
-            parent_element : Element of parent of properties element.
         '''
         # Create a properties element.
         properties = SubElement(self.__tree.getroot(), u'properties')
@@ -306,11 +303,11 @@ def run_tests(adb_location, serial_number,
 
 def output_result(result, file):
     u'''
-    Output result to the standard output.
+    Output result to the file object.
 
     Parameters :
         result : An ElementTree object.
-        file : File to output result.
+        file : File object to output result.
     '''
     # Generate XML.
     output = StringIO()
