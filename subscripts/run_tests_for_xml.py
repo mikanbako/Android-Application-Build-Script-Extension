@@ -303,11 +303,11 @@ def run_tests(adb_location, serial_number,
 
 def output_result(result, file):
     u'''
-    Output result to the standard output.
+    Output result to the file object.
 
     Parameters :
         result : An ElementTree object.
-        file : File to output result.
+        file : File object to output result.
     '''
     # Generate XML.
     output = StringIO()
