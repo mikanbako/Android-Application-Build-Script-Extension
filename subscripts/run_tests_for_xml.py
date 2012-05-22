@@ -145,7 +145,7 @@ class TestResultXmlFormatter(ITestRunListener):
 
         # Create a properties element.
         self.__device_properties = device_properties
-        self.create_properties_element(self.__test_suite_element)
+        self.create_properties_element()
 
     def create_properties_element(self):
         u'''
