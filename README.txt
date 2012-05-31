@@ -29,7 +29,7 @@ Removed feature from sdk_r16 :
 
     * Coverage filtering
         * Because Android SDK Tools supports coverage filter from revision 17.
-          You can filter coverage result by "coverage.filter" property.
+          You can filter coverage result by "emma.filter" property.
 
 First Setup :
 
