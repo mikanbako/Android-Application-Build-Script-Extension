@@ -16,8 +16,10 @@
     limitations under the License.
 -->
 <project>
-    <!-- This target is overrided test target in tools/ant/build.xml on
+
+    <!-- -test-coverage-xml target is overrided test target in tools/ant/build.xml on
          Android SDK Tools Revision 20. -->
+
     <target name="-test-coverage-xml"
                 description="Runs tests from the package defined in test.package property">
         <if condition="${project.is.test}">
@@ -96,7 +98,7 @@
                 <infileset file="${out.absolute.dir}/coverage.ec" />
                 <infileset file="${tested.project.out.absolute.dir}/coverage.em" />
                 <xml outfile="${coverage.xml.output}" />
-                <html outfile="${out.absolute.dir}/coverage.html" encoding="UTF-8" />
+                <html outfile="${coverage.html.output}" encoding="UTF-8" />
            </report>
         </emma>
         <echo level="info">Cleaning up temporary files...</echo>
