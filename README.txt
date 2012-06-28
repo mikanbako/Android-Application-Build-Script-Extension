@@ -21,7 +21,7 @@ Features :
 
 Required softwares :
 
-    * Android SDK Tools Revision 17 or above (http://developer.android.com/)
+    * Android SDK Tools Revision 17 - 19 (http://developer.android.com/)
     * Ant 1.8.0 or above (http://ant.apache.org/)
     * Static code analyzing tools if you run targets of static code analyze.
 
