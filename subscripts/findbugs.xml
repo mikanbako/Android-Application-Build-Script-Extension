@@ -50,7 +50,7 @@
         </sequential>
     </macrodef>
 
-    <target name="findbugs" depends="-compile"
+    <target name="findbugs" depends="-set-debug-mode, -compile"
             description="Run FindBugs and report by HTML.">
         <local name="exclude.filter" />
 
@@ -62,7 +62,7 @@
                 output.file="${findbugs.output.file.html}"/>
     </target>
 
-    <target name="findbugs-xml" depends="-compile"
+    <target name="findbugs-xml" depends="-set-debug-mode, -compile"
             description="Run FindBugs and report by XML.">
         <local name="exclude.filter" />
 
