@@ -87,44 +87,7 @@
         <echo message="XML of test result is outputted to ${test.result.xml.output}" />
     </target>
 
-    <target name="-test-coverage-xml" depends="-get-manifest-package, -get-tested-manifest-package">
-        <echo message="Run tests and measure coverage about ${test.runner} on ${manifest.package}." />
-        <run-tests-for-xml>
-            <args>
-                <arg value="-a" />
-                <arg path="${adb}" />
-                <arg value="-b" />
-                <arg value="${adb.device.arg}" />
-                <arg value="-o" />
-                <arg value="${test.result.xml.output}" />
-                <arg value="--coverage" />
-                <arg value="${manifest.package}" />
-                <arg value="${test.runner}" />
-            </args>
-        </run-tests-for-xml>
-        <exec executable="${adb}" failonerror="true"
-                taskname="get coverage.ec from device">
-            <arg line="${adb.device.arg}" />
-            <arg value="pull" />
-            <arg value="/data/data/${tested.manifest.package}/files/coverage.ec" />
-            <arg value="${basedir}/coverage.ec" />
-        </exec>
-        <emma>
-            <report sourcepath="${tested.project.absolute.dir}/${source.dir}"
-                    verbosity="${verbosity}">
-                <infileset dir="${basedir}">
-                    <include name="coverage.ec" />
-                    <include name="coverage.em" />
-                </infileset>
-                <xml outfile="${coverage.xml.output}" />
-                <html outfile="${coverage.html.output}" encoding="UTF-8" />
-            </report>
-        </emma>
-        <delete file="coverage.ec" />
-        <delete file="coverage.em" />
-        <echo message="XML of test result is saved to ${test.result.xml.output}" />
-        <echo message="HTML and XML of coverage report are saved to ${coverage.html.output} and ${coverage.xml.output}" />
-    </target>
+    <import file="${subscripts.directory}/run-tests-with-emma.xml" />
 
     <target name="test-xml"
             depends="-test-project-check, -make-test-result-directory"
