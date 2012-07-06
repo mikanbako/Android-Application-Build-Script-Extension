@@ -62,6 +62,7 @@ import sys
 from com.android.ddmlib import AndroidDebugBridge
 from com.android.ddmlib.testrunner import RemoteAndroidTestRunner
 from com.android.ddmlib.testrunner import ITestRunListener
+from tempfile import TemporaryFile
 
 # Pattern that represents option of serial number of device.
 PATTERN_SERIAL_NUMBER_OPTION = re.compile(ur'-s\s+(?P<serial_number>[^-]\S+)')
@@ -310,15 +311,19 @@ def output_result(result, file):
         file : File object to output result.
     '''
     # Generate XML.
-    output = StringIO()
+    output = TemporaryFile()
     result.write(output, XML_ENCODING)
+
+    # Format XML.
+    output.seek(0)
+    reader = codecs.getreader(XML_ENCODING)(output)
     outputted_xml = PATTERN_XML_INSERTING_NEW_LINE.sub(
-        REPLACEMENT_XML_INSERTING_NEW_LINE, output.getvalue())
+        REPLACEMENT_XML_INSERTING_NEW_LINE, reader.read())
     output.close()
 
-    # Output to the file.
+    # Output XML to the file.
     file_output = codecs.getwriter(XML_ENCODING)(file)
-    print >>file_output, outputted_xml
+    file_output.write(outputted_xml)
 
 def main():
     # Create OptionParser.
