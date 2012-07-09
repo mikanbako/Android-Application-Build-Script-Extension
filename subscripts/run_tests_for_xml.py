@@ -153,7 +153,7 @@ class TestResultXmlFormatter(ITestRunListener):
         Create a properties element.
         '''
         # Create a properties element.
-        properties = SubElement(self.__tree.getroot(), u'properties')
+        properties = SubElement(self.__test_suite_element, u'properties')
 
         # Create a property elements.
         for entry in self.__device_properties.entrySet():
