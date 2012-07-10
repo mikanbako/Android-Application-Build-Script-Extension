@@ -153,7 +153,7 @@ class TestResultXmlFormatter(ITestRunListener):
         Create a properties element.
         '''
         # Create a properties element.
-        properties = SubElement(self.__tree.getroot(), u'properties')
+        properties = SubElement(self.__test_suite_element, u'properties')
 
         # Create a property elements.
         for entry in self.__device_properties.entrySet():
@@ -161,12 +161,14 @@ class TestResultXmlFormatter(ITestRunListener):
 
     def testRunStarted(self, runName, testCount):
         # Set attributes of the testsuite element.
-        self.__test_suite_element.attrib[u'name'] = runName
-        self.__test_suite_element.attrib[u'hostname'] = \
-            self.__device_properties[self.PROPERTY_KEY_HOST_NAME]
-        self.__test_suite_element.attrib[u'tests'] = unicode(testCount)
-        now = datetime.now()
-        self.__test_suite_element.attrib[u'timestamp'] = now.isoformat()
+
+        self.__test_suite_element.attrib.update({
+            u'name': runName,
+            u'hostname':
+                self.__device_properties[self.PROPERTY_KEY_HOST_NAME],
+            u'tests': unicode(testCount),
+            u'timestamp': unicode(datetime.now().isoformat()),
+            })
 
         # Initialize counters.
         self.__failed_test_count = 0
@@ -220,9 +222,11 @@ class TestResultXmlFormatter(ITestRunListener):
 
     def testRunEnded(self, elapsedTime, testMetrics):
         # Set attributes of the testsute.
-        self.__test_suite_element.attrib[u'time'] = unicode(float(elapsedTime) / 1000)
-        self.__test_suite_element.attrib[u'errors'] = unicode(self.__error_test_count)
-        self.__test_suite_element.attrib[u'failures'] = unicode(self.__failed_test_count)
+        self.__test_suite_element.attrib.update({
+            u'time': unicode(float(elapsedTime) / 1000),
+            u'errors': unicode(self.__error_test_count),
+            u'failures': unicode(self.__failed_test_count),
+            })
 
     def get_result(self):
         u'''
