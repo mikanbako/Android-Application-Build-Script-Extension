@@ -1,4 +1,4 @@
 .DS_Store
-externals/lib/*.jar
-externals/findbugs/*
+build/externals/lib/*.jar
+build/externals/findbugs/*
 *.pyc
