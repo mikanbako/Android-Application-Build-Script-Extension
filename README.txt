@@ -33,10 +33,9 @@ Removed feature from sdk_r16 :
 
 First Setup :
 
-    1. Put these scripts and sub directories in a directory that names
-       "build" at top directory of application project.
+    1. Copy "build" directory to the top directory of your application project.
 
-    2. Replace <import> task at build.xml by the below.
+    2. Replace <import> task at your build.xml by the below.
 
         <import file="build/extended_build.xml" />
 
