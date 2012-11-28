@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 ------------------------------
-subscripts/run-tests-with-emma.xml :
+build/subscripts/run-tests-with-emma.xml :
 
 Copyright 2012 The Android Open Source Project
 Copyright 2012 Keita Kita
