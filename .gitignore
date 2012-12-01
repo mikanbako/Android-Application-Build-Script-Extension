@@ -2,3 +2,6 @@
 build/externals/lib/*.jar
 build/externals/findbugs/*
 *.pyc
+local.properties
+bin
+gen
