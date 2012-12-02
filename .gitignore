@@ -5,3 +5,5 @@ build/externals/findbugs/*
 local.properties
 bin
 gen
+reports
+*/*/build
