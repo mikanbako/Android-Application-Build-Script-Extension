@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+
+    <!--
+        Define properties.
+    -->
+
+    <!-- Name of directory containing build scripts. -->
+    <property name="build.script.directory.name" value="build" />
+
+    <!-- Name of directory containing reports. -->
+    <property name="reports.directory.name" value="reports" />
+
+    <!-- Directory containing sample application. -->
+    <property name="sample.application.directory"
+        location="${test.projects.directory}/sample-application" />
+
+    <!-- Directory containing sample test application. -->
+    <property name="sample.test.application.directory"
+        location="${sample.application.directory}/tests" />
+
+    <!-- Flag representing whether creating local.properties is required. -->
+    <condition property="require.create.local.properties"
+            value="true" else="false">
+        <not>
+            <available
+                file="${sample.application.directory}/local.properties" />
+        </not>
+    </condition>
+
+    <!--
+        Define macros.
+    -->
+
+    <macrodef name="clean-project" description="Clean specified project.">
+        <attribute name="application.project.directory"
+                description="Directory of an application project." />
+        <sequential>
+            <ant dir="@{application.project.directory}"
+                target="clean" inheritAll="false" taskname="clean project" />
+        </sequential>
+    </macrodef>
+
+    <macrodef name="set-build-scripts"
+            description="Clean and set build scripts directory.">
+        <attribute name="application.project.directory"
+                description="Directory of an application project." />
+        <sequential>
+            <local name="build.script.directory" />
+            <property name="build.script.directory"
+                location="@{application.project.directory}/${build.script.directory.name}" />
+
+            <delete dir="${build.script.directory}"
+                taskname="clean build script" />
+            <copy todir="${build.script.directory}"
+                    taskname="copy build script">
+                <fileset dir="${extension.build.scripts.directory}" />
+            </copy>
+
+            <clean-project
+                application.project.directory="@{application.project.directory}" />
+        </sequential>
+    </macrodef>
+
+    <macrodef name="execute-checkstyle-targets"
+            description="Execute checkstyle targets.">
+        <attribute name="project.directory"
+                description="Directory of a project." />
+        <sequential>
+            <ant dir="@{project.directory}" inheritAll="false">
+                <property name="checkstyle.enable" value="true" />
+                <target name="checkstyle" />
+                <target name="checkstyle-xml" />
+            </ant>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="check-checkstyle-result"
+            description="Fail if checkstyle result is not available.">
+        <attribute name="project.directory"
+                description="Directory of a project." />
+        <sequential>
+            <local name="reports.directory" />
+            <property name="reports.directory"
+                location="@{project.directory}/${reports.directory.name}" />
+
+            <echo
+                message="Check whether checkstyle result files is available in @{project.directory}" />
+            <fail message="Checkstyle result is not available.">
+                <condition>
+                    <not>
+                        <and>
+                            <available
+                                file="${reports.directory}/checkstyle.txt" />
+                            <available
+                                file="${reports.directory}/checkstyle.xml" />
+                        </and>
+                    </not>
+                </condition>
+            </fail>
+        </sequential>
+    </macrodef>
+
+    <!--
+        Define targets.
+    -->
+
+    <!-- Create local.properties for projects. -->
+    <target name="-create-local-properties"
+            if="require.create.local.properties">
+        <apply executable="android" parallel="false"
+                taskname="create local.properties">
+            <arg line="update project" />
+            <arg value="-s" />
+            <arg value="-p" />
+            <srcfile />
+            <dirset dir="${test.projects.directory}">
+                <include name="*" />
+            </dirset>
+        </apply>
+    </target>
+
+    <target name="test-checkstyle" depends="-create-local-properties"
+            description="Test checkstyle targets.">
+        <set-build-scripts
+            application.project.directory="${sample.application.directory}" />
+        <execute-checkstyle-targets
+            project.directory="${sample.application.directory}" />
+        <check-checkstyle-result
+            project.directory="${sample.application.directory}" />
+        <execute-checkstyle-targets
+            project.directory="${sample.test.application.directory}" />
+        <check-checkstyle-result
+            project.directory="${sample.test.application.directory}" />
+    </target>
+</project>
