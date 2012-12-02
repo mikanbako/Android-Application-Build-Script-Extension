@@ -29,7 +29,7 @@
     </condition>
 
     <!--
-        Define macros.
+        Define global macros.
     -->
 
     <macrodef name="clean-project" description="Clean specified project.">
@@ -62,38 +62,18 @@
         </sequential>
     </macrodef>
 
-    <macrodef name="execute-checkstyle-targets"
-            description="Execute checkstyle targets.">
-        <attribute name="project.directory"
-                description="Directory of a project." />
+    <macrodef name="check-files-are-available"
+            description="Fail if files are not available.">
+        <attribute name="message"
+            description="Displayed message when check fails." />
+        <element name="available-files" implicit="true"
+            description="available elements for check." />
         <sequential>
-            <ant dir="@{project.directory}" inheritAll="false">
-                <property name="checkstyle.enable" value="true" />
-                <target name="checkstyle" />
-                <target name="checkstyle-xml" />
-            </ant>
-        </sequential>
-    </macrodef>
-
-    <macrodef name="check-checkstyle-result"
-            description="Fail if checkstyle result is not available.">
-        <attribute name="project.directory"
-                description="Directory of a project." />
-        <sequential>
-            <local name="reports.directory" />
-            <property name="reports.directory"
-                location="@{project.directory}/${reports.directory.name}" />
-
-            <echo
-                message="Check whether checkstyle result files is available in @{project.directory}" />
-            <fail message="Checkstyle result is not available.">
+            <fail message="@{message}">
                 <condition>
                     <not>
                         <and>
-                            <available
-                                file="${reports.directory}/checkstyle.txt" />
-                            <available
-                                file="${reports.directory}/checkstyle.xml" />
+                            <available-files />
                         </and>
                     </not>
                 </condition>
@@ -120,17 +100,99 @@
         </apply>
     </target>
 
+    <macrodef name="execute-checkstyle-targets"
+            description="Execute checkstyle targets.">
+        <attribute name="project.directory"
+            description="Directory of a project." />
+        <sequential>
+            <ant dir="@{project.directory}" inheritAll="false">
+                <property name="checkstyle.enable" value="true" />
+                <target name="checkstyle" />
+                <target name="checkstyle-xml" />
+            </ant>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="check-checkstyle-result"
+            description="Fail if checkstyle result is not available.">
+        <attribute name="project.directory"
+            description="Directory of a project." />
+        <sequential>
+            <local name="reports.directory" />
+            <property name="reports.directory"
+                location="@{project.directory}/${reports.directory.name}" />
+
+            <echo
+                message="Check whether checkstyle result files are available in @{project.directory}" />
+            <check-files-are-available
+                    message="Checkstyle result is not available.">
+                <available file="${reports.directory}/checkstyle.txt" />
+                <available file="${reports.directory}/checkstyle.xml" />
+            </check-files-are-available>
+        </sequential>
+    </macrodef>
+
     <target name="test-checkstyle" depends="-create-local-properties"
             description="Test checkstyle targets.">
         <set-build-scripts
             application.project.directory="${sample.application.directory}" />
+
         <execute-checkstyle-targets
             project.directory="${sample.application.directory}" />
         <check-checkstyle-result
             project.directory="${sample.application.directory}" />
+
         <execute-checkstyle-targets
             project.directory="${sample.test.application.directory}" />
         <check-checkstyle-result
+            project.directory="${sample.test.application.directory}" />
+    </target>
+
+    <macrodef name="execute-findbugs-targets"
+            description="Execute findbugs targets.">
+        <attribute name="project.directory"
+            description="Directory of a project." />
+        <sequential>
+            <ant dir="@{project.directory}" inheritAll="false">
+                <property name="findbugs.enable" value="true" />
+                <target name="findbugs" />
+                <target name="findbugs-xml" />
+            </ant>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="check-findbugs-result"
+            description="Fail if findbugs result is not available.">
+        <attribute name="project.directory"
+            description="Directory of a project." />
+        <sequential>
+            <local name="reports.directory" />
+            <property name="reports.directory"
+                location="@{project.directory}/${reports.directory.name}" />
+
+            <echo
+                message="Check whether findbugs result files are available in @{project.directory}" />
+            <check-files-are-available
+                    message="FindBugs result is not avaiable.">
+                <available file="${reports.directory}/findbugs.html" />
+                <available file="${reports.directory}/findbugs.xml" />
+            </check-files-are-available>
+        </sequential>
+    </macrodef>
+
+    <target name="test-findbugs" depends="-create-local-properties"
+            description="Test findbugs targets.">
+        <set-build-scripts
+            application.project.directory="${sample.application.directory}" />
+
+        <execute-findbugs-targets
+            project.directory="${sample.application.directory}" />
+        <check-findbugs-result
+            project.directory="${sample.application.directory}" />
+
+        <execute-findbugs-targets
+            project.directory="${sample.test.application.directory}" />
+        <check-findbugs-result
             project.directory="${sample.test.application.directory}" />
     </target>
 </project>
