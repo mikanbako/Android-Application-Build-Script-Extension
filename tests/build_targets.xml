@@ -293,4 +293,52 @@
             project.directory="${sample.test.application.directory}" />
     </target>
 
+    <macrodef name="execute-cpd-targets"
+            description="Execute cpd targets.">
+        <attribute name="project.directory"
+            description="Directory of a project." />
+        <sequential>
+            <ant dir="@{project.directory}" inheritAll="false">
+                <property name="pmd.cpd.enable" value="true" />
+                <target name="cpd" />
+                <target name="cpd-xml" />
+            </ant>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="check-cpd-result"
+            description="Fail if cpd result is not available.">
+        <attribute name="project.directory"
+            description="Directory of a project." />
+        <sequential>
+            <local name="reports.directory" />
+            <property name="reports.directory"
+                location="@{project.directory}/${reports.directory.name}" />
+
+            <echo
+                message="Check whether cpd result files are available in @{project.directory}" />
+            <check-files-are-available
+                    message="PMD's CPD result is not avaiable.">
+                <available file="${reports.directory}/cpd.txt" />
+                <available file="${reports.directory}/cpd.xml" />
+            </check-files-are-available>
+        </sequential>
+    </macrodef>
+
+    <target name="test-cpd" depends="-create-local-properties"
+            description="Test cpd targets.">
+        <set-build-scripts
+            application.project.directory="${sample.application.directory}" />
+
+        <execute-cpd-targets
+            project.directory="${sample.application.directory}" />
+        <check-cpd-result
+            project.directory="${sample.application.directory}" />
+
+        <execute-cpd-targets
+            project.directory="${sample.test.application.directory}" />
+        <check-cpd-result
+            project.directory="${sample.test.application.directory}" />
+    </target>
+
 </project>
