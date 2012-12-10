@@ -244,4 +244,53 @@
         <check-javancss-result
             project.directory="${sample.test.application.directory}" />
     </target>
+
+    <macrodef name="execute-pmd-targets"
+            description="Execute pmd targets.">
+        <attribute name="project.directory"
+            description="Directory of a project." />
+        <sequential>
+            <ant dir="@{project.directory}" inheritAll="false">
+                <property name="pmd.enable" value="true" />
+                <target name="pmd" />
+                <target name="pmd-xml" />
+            </ant>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="check-pmd-result"
+            description="Fail if pmd result is not available.">
+        <attribute name="project.directory"
+            description="Directory of a project." />
+        <sequential>
+            <local name="reports.directory" />
+            <property name="reports.directory"
+                location="@{project.directory}/${reports.directory.name}" />
+
+            <echo
+                message="Check whether pmd result files are available in @{project.directory}" />
+            <check-files-are-available
+                    message="PMD result is not avaiable.">
+                <available file="${reports.directory}/pmd.html" />
+                <available file="${reports.directory}/pmd.xml" />
+            </check-files-are-available>
+        </sequential>
+    </macrodef>
+
+    <target name="test-pmd" depends="-create-local-properties"
+            description="Test pmd targets.">
+        <set-build-scripts
+            application.project.directory="${sample.application.directory}" />
+
+        <execute-pmd-targets
+            project.directory="${sample.application.directory}" />
+        <check-pmd-result
+            project.directory="${sample.application.directory}" />
+
+        <execute-pmd-targets
+            project.directory="${sample.test.application.directory}" />
+        <check-pmd-result
+            project.directory="${sample.test.application.directory}" />
+    </target>
+
 </project>
