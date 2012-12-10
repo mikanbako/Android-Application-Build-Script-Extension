@@ -19,9 +19,10 @@
     <property name="sample.test.application.directory"
         location="${sample.application.directory}/tests" />
 
-    <!-- Flag representing whether creating local.properties is required. -->
+    <!-- Property is set to represent whether creating
+         local.properties is required. -->
     <condition property="require.create.local.properties"
-            value="true" else="false">
+            value="true">
         <not>
             <available
                 file="${sample.application.directory}/local.properties" />
