@@ -196,4 +196,52 @@
         <check-findbugs-result
             project.directory="${sample.test.application.directory}" />
     </target>
+
+    <macrodef name="execute-javancss-targets"
+            description="Execute javancss targets.">
+        <attribute name="project.directory"
+            description="Directory of a project." />
+        <sequential>
+            <ant dir="@{project.directory}" inheritAll="false">
+                <property name="javancss.enable" value="true" />
+                <target name="javancss" />
+                <target name="javancss-xml" />
+            </ant>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="check-javancss-result"
+            description="Fail if javancss result is not available.">
+        <attribute name="project.directory"
+            description="Directory of a project." />
+        <sequential>
+            <local name="reports.directory" />
+            <property name="reports.directory"
+                location="@{project.directory}/${reports.directory.name}" />
+
+            <echo
+                message="Check whether javancss result files are available in @{project.directory}" />
+            <check-files-are-available
+                    message="Javancss result is not avaiable.">
+                <available file="${reports.directory}/javancss_metrics.txt" />
+                <available file="${reports.directory}/javancss_metrics.xml" />
+            </check-files-are-available>
+        </sequential>
+    </macrodef>
+
+    <target name="test-javancss" depends="-create-local-properties"
+            description="Test javancss targets.">
+        <set-build-scripts
+            application.project.directory="${sample.application.directory}" />
+
+        <execute-javancss-targets
+            project.directory="${sample.application.directory}" />
+        <check-javancss-result
+            project.directory="${sample.application.directory}" />
+
+        <execute-javancss-targets
+            project.directory="${sample.test.application.directory}" />
+        <check-javancss-result
+            project.directory="${sample.test.application.directory}" />
+    </target>
 </project>
