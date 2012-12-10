@@ -83,7 +83,7 @@
     </macrodef>
 
     <!--
-        Define targets.
+        Define private targets.
     -->
 
     <!-- Create local.properties for projects. -->
@@ -100,6 +100,10 @@
             </dirset>
         </apply>
     </target>
+
+    <!--
+        Define checkstyle testing target.
+    -->
 
     <macrodef name="execute-checkstyle-targets"
             description="Execute checkstyle targets.">
@@ -149,6 +153,10 @@
             project.directory="${sample.test.application.directory}" />
     </target>
 
+    <!--
+        Define findbugs testing target.
+    -->
+
     <macrodef name="execute-findbugs-targets"
             description="Execute findbugs targets.">
         <attribute name="project.directory"
@@ -196,6 +204,10 @@
         <check-findbugs-result
             project.directory="${sample.test.application.directory}" />
     </target>
+
+    <!--
+        Define javancss testing target.
+    -->
 
     <macrodef name="execute-javancss-targets"
             description="Execute javancss targets.">
@@ -245,6 +257,10 @@
             project.directory="${sample.test.application.directory}" />
     </target>
 
+    <!--
+        Define pmd testing target.
+    -->
+
     <macrodef name="execute-pmd-targets"
             description="Execute pmd targets.">
         <attribute name="project.directory"
@@ -292,6 +308,10 @@
         <check-pmd-result
             project.directory="${sample.test.application.directory}" />
     </target>
+
+    <!--
+        Define cpd testing target.
+    -->
 
     <macrodef name="execute-cpd-targets"
             description="Execute cpd targets.">
