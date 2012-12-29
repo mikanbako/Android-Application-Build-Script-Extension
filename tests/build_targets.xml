@@ -19,6 +19,11 @@
     <property name="sample.test.application.directory"
         location="${sample.application.directory}/tests" />
 
+    <!-- Directory containing build artifacts of sample test application. -->
+    <property name="sample.test.application.bin.directory"
+        location="${sample.test.application.directory}/bin" />
+
+
     <!-- Property is set to represent whether creating
          local.properties is required. -->
     <condition property="require.create.local.properties"
@@ -361,4 +366,142 @@
             project.directory="${sample.test.application.directory}" />
     </target>
 
+    <target name="test-standard-test" depends="-create-local-properties"
+            description="Test test target with coverage.">
+        <set-build-scripts
+            application.project.directory="${sample.application.directory}" />
+
+        <local name="coverage.html.file" />
+        <property name="coverage.html.file"
+            location="${sample.test.application.bin.directory}/coverage.html" />
+
+        <delete file="${coverage.html.file}" failonerror="false"
+            taskname="clean artifact" />
+
+        <ant dir="${sample.test.application.directory}" inheritAll="false">
+            <property name="test.runner"
+                value="com.github.mikanbako.buildscriptextension.sample.SuccessfulTestRunner" />
+            <target name="uninstall" />
+            <target name="emma" />
+            <target name="debug" />
+            <target name="install" />
+            <target name="test" />
+        </ant>
+
+        <check-files-are-available
+                message="HTML of coverage is not avaiable.">
+            <available
+                file="${coverage.html.file}" />
+        </check-files-are-available>
+    </target>
+
+    <target name="test-extended-test-xml" depends="-create-local-properties"
+            description="Test test-xml target.">
+        <set-build-scripts
+            application.project.directory="${sample.application.directory}" />
+
+        <local name="sample.test.application.reports.directory" />
+        <property name="sample.test.application.reports.directory"
+            location="${sample.test.application.directory}/${reports.directory.name}" />
+
+        <local name="test.result.file" />
+        <property name="test.result.file"
+            location="${sample.test.application.reports.directory}/test_result.xml" />
+
+        <delete dir="${sample.test.application.reports.directory}"
+            failonerror="false" taskname="clean reports" />
+
+        <ant dir="${sample.test.application.directory}" inheritAll="false">
+            <property name="test.enable" value="true" />
+            <property name="test.runner"
+                value="com.github.mikanbako.buildscriptextension.sample.SuccessfulTestRunner" />
+            <target name="uninstall" />
+            <target name="debug" />
+            <target name="install" />
+            <target name="test-xml" />
+        </ant>
+
+        <check-files-are-available message="Test result is not available.">
+            <available file="${test.result.file}" />
+        </check-files-are-available>
+
+        <ant dir="${sample.test.application.directory}" inheritAll="false">
+            <property name="test.enable" value="true" />
+            <target name="verify-test-result" />
+        </ant>
+    </target>
+
+    <target name="test-extended-test-xml-when-failure"
+            depends="-create-local-properties"
+            description="Test test-xml target when the test fails.">
+        <set-build-scripts
+            application.project.directory="${sample.application.directory}" />
+
+        <local name="sample.test.application.reports.directory" />
+        <property name="sample.test.application.reports.directory"
+            location="${sample.test.application.directory}/${reports.directory.name}" />
+
+        <ant dir="${sample.test.application.directory}" inheritAll="false">
+            <property name="test.enable" value="true" />
+            <property name="test.runner"
+                value="com.github.mikanbako.buildscriptextension.sample.FailureTestRunner" />
+            <target name="uninstall" />
+            <target name="debug" />
+            <target name="install" />
+            <target name="test-xml" />
+        </ant>
+
+        <local name="test.result" />
+
+        <exec executable="ant" dir="${sample.test.application.directory}"
+                searchpath="true" resultproperty="test.result"
+                taskname="verifing failure test">
+            <arg line="-Dtest.enable=true" />
+            <arg line="verify-test-result" />
+        </exec>
+
+        <fail message="Test result is invalid. Because it is ${test.result}.">
+            <condition>
+                <not>
+                    <equals arg1="${test.result}" arg2="1" />
+                </not>
+            </condition>
+        </fail>
+    </target>
+
+    <target name="test-extended-test-xml-with-emma" depends="-create-local-properties"
+            description="Test test-xml target with emma.">
+        <set-build-scripts
+            application.project.directory="${sample.application.directory}" />
+
+        <local name="sample.test.application.reports.directory" />
+        <property name="sample.test.application.reports.directory"
+            location="${sample.test.application.directory}/${reports.directory.name}" />
+
+        <local name="coverage.result.html.file" />
+        <property name="coverage.result.html.file"
+            location="${sample.test.application.reports.directory}/coverage.html" />
+        <local name="coverage.result.xml.file" />
+        <property name="coverage.result.xml.file"
+            location="${sample.test.application.reports.directory}/coverage.xml" />
+
+        <delete dir="${sample.test.application.reports.directory}"
+            failonerror="false" taskname="clean reports" />
+
+        <ant dir="${sample.test.application.directory}" inheritAll="false">
+            <property name="test.enable" value="true" />
+            <property name="test.runner"
+                value="com.github.mikanbako.buildscriptextension.sample.SuccessfulTestRunner" />
+            <target name="uninstall" />
+            <target name="emma" />
+            <target name="debug" />
+            <target name="install" />
+            <target name="test-xml" />
+        </ant>
+
+        <check-files-are-available message="Test result is not available.">
+            <available file="${coverage.result.html.file}" />
+            <available file="${coverage.result.xml.file}" />
+        </check-files-are-available>
+    </target>
 </project>
