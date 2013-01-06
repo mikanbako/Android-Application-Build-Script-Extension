@@ -262,7 +262,7 @@ class DeviceConnectingEvent(AndroidDebugBridge.IDeviceChangeListener):
         self.__event.wait(self.TIMEOUT_UNTIL_CONNECTED_SECONDS)
 
 def run_tests(adb_location, serial_number,
-        package_name, test_runner_name, enable_coverage):
+        package_name, test_runner_name, enable_coverage, coverage_file):
     u'''
     Run tests and output result as XML.
 
@@ -271,6 +271,8 @@ def run_tests(adb_location, serial_number,
         serial_number : Serial number of device or emulator. None is OK.
         test_runner_name : Name of test runner. None is OK.
         enable_coverage : Whether coverage measuring is enabled.
+        coverage_file : Path of file that will be saved coverage result.
+            None is OK.
     Return:
         ElementTree of result. None if tests did not run.
     '''
@@ -298,6 +300,8 @@ def run_tests(adb_location, serial_number,
         test_runner = RemoteAndroidTestRunner(
             package_name, test_runner_name, device)
         test_runner.setCoverage(enable_coverage)
+        if enable_coverage and coverage_file:
+            test_runner.addInstrumentationArg('coverageFile', coverage_file)
         formatter = TestResultXmlFormatter(device.getProperties())
         test_runner.run([formatter])
 
@@ -336,6 +340,9 @@ def main():
         help='Location of adb. (required)')
     parser.add_option('-b', '--adbdevicearg', metavar='ARG', dest='adb_device_arg',
         help='Arguments for adb. This option for build script by Ant.')
+    parser.add_option('-f', '--coverageFile', metavar='PATH', dest='coverage_file',
+        help='Path of file that will be saved coverage result on device or emulator.',
+        default=None)
     parser.add_option('-s', '--serial', metavar='SERIAL', dest='serial_number',
         help='Serial number of the device. If no serial number, this script will use first device of list.')
     parser.add_option('--coverage', action='store_true', dest='coverage',
@@ -380,7 +387,7 @@ def main():
     # Run tests.
 
     result = run_tests(options.adb_location, serial_number,
-        package_name, test_runner, options.coverage)
+        package_name, test_runner, options.coverage, options.coverage_file)
 
     # If test is finished, output result.
     # Otherwise test running is failed.
