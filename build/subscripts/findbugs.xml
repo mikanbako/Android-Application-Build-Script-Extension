@@ -44,13 +44,13 @@
                     jvmargs="-Duser.language=en">
                 <sourcePath path="${source.absolute.dir}" />
                 <sourcePath path="${gen.absolute.dir}" />
-                <auxClasspath path="${android.jar}" />
+                <auxClasspath path="${project.target.android.jar}" />
                 <class location="${out.classes.absolute.dir}" />
             </findbugs>
         </sequential>
     </macrodef>
 
-    <target name="findbugs" depends="-set-debug-mode, -compile"
+    <target name="findbugs" depends="-set-debug-mode, -build-setup, -compile"
             description="Run FindBugs and report by HTML.">
         <local name="exclude.filter" />
 
@@ -62,7 +62,8 @@
                 output.file="${findbugs.output.file.html}"/>
     </target>
 
-    <target name="findbugs-xml" depends="-set-debug-mode, -compile"
+    <target name="findbugs-xml"
+            depends="-set-debug-mode, -build-setup, -compile"
             description="Run FindBugs and report by XML.">
         <local name="exclude.filter" />
 
