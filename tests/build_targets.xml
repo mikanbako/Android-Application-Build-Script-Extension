@@ -107,6 +107,17 @@
     </target>
 
     <!--
+        Define clean target.
+    -->
+
+    <target name="clean" description="Clean intermediate files by building.">
+        <clean-project
+            application.project.directory="${sample.application.directory}"/>
+        <clean-project
+            application.project.directory="${sample.test.application.directory}"/>
+    </target>
+
+    <!--
         Define test all target.
     -->
 
