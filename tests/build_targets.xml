@@ -107,6 +107,24 @@
     </target>
 
     <!--
+        Define test all target.
+    -->
+
+    <target name="test-all" description="Execute all testing.">
+        <antcall>
+            <target name="test-checkstyle" />
+            <target name="test-cpd" />
+            <target name="test-findbugs" />
+            <target name="test-javancss" />
+            <target name="test-pmd" />
+            <target name="test-standard-test" />
+            <target name="test-extended-test-xml" />
+            <target name="test-extended-test-xml-when-failure" />
+            <target name="test-extended-test-xml-with-emma" />
+        </antcall>
+    </target>
+
+    <!--
         Define checkstyle testing target.
     -->
 
