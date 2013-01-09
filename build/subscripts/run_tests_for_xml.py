@@ -269,6 +269,7 @@ def run_tests(adb_location, serial_number,
     Parameters:
         adb_location : Location of adb.
         serial_number : Serial number of device or emulator. None is OK.
+        package_name : Package name of test application package.
         test_runner_name : Name of test runner. None is OK.
         enable_coverage : Whether coverage measuring is enabled.
     Return:
