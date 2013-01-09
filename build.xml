@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="android_build_extension_scripts">
+
+    <!--
+        Define properties about top directories.
+    -->
+
+    <!-- Directory containing the extension build scripts. -->
+    <property name="extension.build.scripts.directory" location="build"/>
+
+    <!-- Directory containing test projects. -->
+    <property name="test.projects.directory" location="tests"/>
+
+    <!--
+        Import targets.
+    -->
+
+    <import file="${test.projects.directory}/build_targets.xml" />
+</project>

@@ -40,13 +40,14 @@
                 <fileset dir="${source.absolute.dir}">
                     <include name="**/*.java" />
                 </fileset>
-                <auxclasspath path="${android.jar}" />
+                <auxclasspath path="${project.target.android.jar}" />
             </pmd>
             <echo message="PMD report is saved to @{output.file}" />
         </sequential>
     </macrodef>
 
-    <target name="pmd" depends="-setup" description="Run PMD and report by HTML.">
+    <target name="pmd" depends="-set-debug-mode, -build-setup"
+            description="Run PMD and report by HTML.">
         <local name="rule.set.file" />
 
         <select-config-file destination="rule.set.file"
@@ -56,7 +57,8 @@
             format="html" output.file="${pmd.output.file.html}" />
     </target>
 
-    <target name="pmd-xml" depends="-setup" description="Run PMD and report by XML.">
+    <target name="pmd-xml" depends="-set-debug-mode, -build-setup"
+            description="Run PMD and report by XML.">
         <local name="rule.set.file" />
 
         <select-config-file destination="rule.set.file"

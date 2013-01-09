@@ -73,6 +73,8 @@
                 <arg value="${test.result.xml.output}" />
                 <arg value="--coverage" />
                 <arg value="${project.app.package}" />
+                <arg value="--coverageFile" />
+                <arg value="${emma.dump.file}" />
                 <arg value="${test.runner}" />
             </args>
         </run-tests-for-xml>

@@ -1,0 +1,536 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+
+    <!--
+        Define properties.
+    -->
+
+    <!-- Name of directory containing build scripts. -->
+    <property name="build.script.directory.name" value="build" />
+
+    <!-- Name of directory containing reports. -->
+    <property name="reports.directory.name" value="reports" />
+
+    <!-- Directory containing sample application. -->
+    <property name="sample.application.directory"
+        location="${test.projects.directory}/sample-application" />
+
+    <!-- Directory containing sample test application. -->
+    <property name="sample.test.application.directory"
+        location="${sample.application.directory}/tests" />
+
+    <!-- Directory containing build artifacts of sample test application. -->
+    <property name="sample.test.application.bin.directory"
+        location="${sample.test.application.directory}/bin" />
+
+
+    <!-- Property is set to represent whether creating
+         local.properties is required. -->
+    <condition property="require.create.local.properties"
+            value="true">
+        <not>
+            <available
+                file="${sample.application.directory}/local.properties" />
+        </not>
+    </condition>
+
+    <!--
+        Define global macros.
+    -->
+
+    <macrodef name="clean-project" description="Clean specified project.">
+        <attribute name="application.project.directory"
+                description="Directory of an application project." />
+        <sequential>
+            <ant dir="@{application.project.directory}"
+                target="clean" inheritAll="false" taskname="clean project" />
+        </sequential>
+    </macrodef>
+
+    <macrodef name="set-build-scripts"
+            description="Clean and set build scripts directory.">
+        <attribute name="application.project.directory"
+                description="Directory of an application project." />
+        <sequential>
+            <local name="build.script.directory" />
+            <property name="build.script.directory"
+                location="@{application.project.directory}/${build.script.directory.name}" />
+
+            <delete dir="${build.script.directory}"
+                taskname="clean build script" />
+            <copy todir="${build.script.directory}"
+                    taskname="copy build script">
+                <fileset dir="${extension.build.scripts.directory}" />
+            </copy>
+
+            <clean-project
+                application.project.directory="@{application.project.directory}" />
+        </sequential>
+    </macrodef>
+
+    <macrodef name="check-files-are-available"
+            description="Fail if files are not available.">
+        <attribute name="message"
+            description="Displayed message when check fails." />
+        <element name="available-files" implicit="true"
+            description="available elements for check." />
+        <sequential>
+            <fail message="@{message}">
+                <condition>
+                    <not>
+                        <and>
+                            <available-files />
+                        </and>
+                    </not>
+                </condition>
+            </fail>
+        </sequential>
+    </macrodef>
+
+    <!--
+        Define private targets.
+    -->
+
+    <!-- Create local.properties for projects. -->
+    <target name="-create-local-properties"
+            if="require.create.local.properties">
+        <apply executable="android" parallel="false"
+                taskname="create local.properties">
+            <arg line="update project" />
+            <arg value="-s" />
+            <arg value="-p" />
+            <srcfile />
+            <dirset dir="${test.projects.directory}">
+                <include name="*" />
+            </dirset>
+        </apply>
+    </target>
+
+    <!--
+        Define clean target.
+    -->
+
+    <target name="clean" description="Clean intermediate files by building.">
+        <clean-project
+            application.project.directory="${sample.application.directory}"/>
+        <clean-project
+            application.project.directory="${sample.test.application.directory}"/>
+    </target>
+
+    <!--
+        Define test all target.
+    -->
+
+    <target name="test-all" description="Execute all testing.">
+        <antcall>
+            <target name="test-checkstyle" />
+            <target name="test-cpd" />
+            <target name="test-findbugs" />
+            <target name="test-javancss" />
+            <target name="test-pmd" />
+            <target name="test-standard-test" />
+            <target name="test-extended-test-xml" />
+            <target name="test-extended-test-xml-when-failure" />
+            <target name="test-extended-test-xml-with-emma" />
+        </antcall>
+    </target>
+
+    <!--
+        Define checkstyle testing target.
+    -->
+
+    <macrodef name="execute-checkstyle-targets"
+            description="Execute checkstyle targets.">
+        <attribute name="project.directory"
+            description="Directory of a project." />
+        <sequential>
+            <ant dir="@{project.directory}" inheritAll="false">
+                <property name="checkstyle.enable" value="true" />
+                <target name="checkstyle" />
+                <target name="checkstyle-xml" />
+            </ant>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="check-checkstyle-result"
+            description="Fail if checkstyle result is not available.">
+        <attribute name="project.directory"
+            description="Directory of a project." />
+        <sequential>
+            <local name="reports.directory" />
+            <property name="reports.directory"
+                location="@{project.directory}/${reports.directory.name}" />
+
+            <echo
+                message="Check whether checkstyle result files are available in @{project.directory}" />
+            <check-files-are-available
+                    message="Checkstyle result is not available.">
+                <available file="${reports.directory}/checkstyle.txt" />
+                <available file="${reports.directory}/checkstyle.xml" />
+            </check-files-are-available>
+        </sequential>
+    </macrodef>
+
+    <target name="test-checkstyle" depends="-create-local-properties"
+            description="Test checkstyle targets.">
+        <set-build-scripts
+            application.project.directory="${sample.application.directory}" />
+
+        <execute-checkstyle-targets
+            project.directory="${sample.application.directory}" />
+        <check-checkstyle-result
+            project.directory="${sample.application.directory}" />
+
+        <execute-checkstyle-targets
+            project.directory="${sample.test.application.directory}" />
+        <check-checkstyle-result
+            project.directory="${sample.test.application.directory}" />
+    </target>
+
+    <!--
+        Define findbugs testing target.
+    -->
+
+    <macrodef name="execute-findbugs-targets"
+            description="Execute findbugs targets.">
+        <attribute name="project.directory"
+            description="Directory of a project." />
+        <sequential>
+            <ant dir="@{project.directory}" inheritAll="false">
+                <property name="findbugs.enable" value="true" />
+                <target name="findbugs" />
+                <target name="findbugs-xml" />
+            </ant>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="check-findbugs-result"
+            description="Fail if findbugs result is not available.">
+        <attribute name="project.directory"
+            description="Directory of a project." />
+        <sequential>
+            <local name="reports.directory" />
+            <property name="reports.directory"
+                location="@{project.directory}/${reports.directory.name}" />
+
+            <echo
+                message="Check whether findbugs result files are available in @{project.directory}" />
+            <check-files-are-available
+                    message="FindBugs result is not avaiable.">
+                <available file="${reports.directory}/findbugs.html" />
+                <available file="${reports.directory}/findbugs.xml" />
+            </check-files-are-available>
+        </sequential>
+    </macrodef>
+
+    <target name="test-findbugs" depends="-create-local-properties"
+            description="Test findbugs targets.">
+        <set-build-scripts
+            application.project.directory="${sample.application.directory}" />
+
+        <execute-findbugs-targets
+            project.directory="${sample.application.directory}" />
+        <check-findbugs-result
+            project.directory="${sample.application.directory}" />
+
+        <execute-findbugs-targets
+            project.directory="${sample.test.application.directory}" />
+        <check-findbugs-result
+            project.directory="${sample.test.application.directory}" />
+    </target>
+
+    <!--
+        Define javancss testing target.
+    -->
+
+    <macrodef name="execute-javancss-targets"
+            description="Execute javancss targets.">
+        <attribute name="project.directory"
+            description="Directory of a project." />
+        <sequential>
+            <ant dir="@{project.directory}" inheritAll="false">
+                <property name="javancss.enable" value="true" />
+                <target name="javancss" />
+                <target name="javancss-xml" />
+            </ant>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="check-javancss-result"
+            description="Fail if javancss result is not available.">
+        <attribute name="project.directory"
+            description="Directory of a project." />
+        <sequential>
+            <local name="reports.directory" />
+            <property name="reports.directory"
+                location="@{project.directory}/${reports.directory.name}" />
+
+            <echo
+                message="Check whether javancss result files are available in @{project.directory}" />
+            <check-files-are-available
+                    message="Javancss result is not avaiable.">
+                <available file="${reports.directory}/javancss_metrics.txt" />
+                <available file="${reports.directory}/javancss_metrics.xml" />
+            </check-files-are-available>
+        </sequential>
+    </macrodef>
+
+    <target name="test-javancss" depends="-create-local-properties"
+            description="Test javancss targets.">
+        <set-build-scripts
+            application.project.directory="${sample.application.directory}" />
+
+        <execute-javancss-targets
+            project.directory="${sample.application.directory}" />
+        <check-javancss-result
+            project.directory="${sample.application.directory}" />
+
+        <execute-javancss-targets
+            project.directory="${sample.test.application.directory}" />
+        <check-javancss-result
+            project.directory="${sample.test.application.directory}" />
+    </target>
+
+    <!--
+        Define pmd testing target.
+    -->
+
+    <macrodef name="execute-pmd-targets"
+            description="Execute pmd targets.">
+        <attribute name="project.directory"
+            description="Directory of a project." />
+        <sequential>
+            <ant dir="@{project.directory}" inheritAll="false">
+                <property name="pmd.enable" value="true" />
+                <target name="pmd" />
+                <target name="pmd-xml" />
+            </ant>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="check-pmd-result"
+            description="Fail if pmd result is not available.">
+        <attribute name="project.directory"
+            description="Directory of a project." />
+        <sequential>
+            <local name="reports.directory" />
+            <property name="reports.directory"
+                location="@{project.directory}/${reports.directory.name}" />
+
+            <echo
+                message="Check whether pmd result files are available in @{project.directory}" />
+            <check-files-are-available
+                    message="PMD result is not avaiable.">
+                <available file="${reports.directory}/pmd.html" />
+                <available file="${reports.directory}/pmd.xml" />
+            </check-files-are-available>
+        </sequential>
+    </macrodef>
+
+    <target name="test-pmd" depends="-create-local-properties"
+            description="Test pmd targets.">
+        <set-build-scripts
+            application.project.directory="${sample.application.directory}" />
+
+        <execute-pmd-targets
+            project.directory="${sample.application.directory}" />
+        <check-pmd-result
+            project.directory="${sample.application.directory}" />
+
+        <execute-pmd-targets
+            project.directory="${sample.test.application.directory}" />
+        <check-pmd-result
+            project.directory="${sample.test.application.directory}" />
+    </target>
+
+    <!--
+        Define cpd testing target.
+    -->
+
+    <macrodef name="execute-cpd-targets"
+            description="Execute cpd targets.">
+        <attribute name="project.directory"
+            description="Directory of a project." />
+        <sequential>
+            <ant dir="@{project.directory}" inheritAll="false">
+                <property name="pmd.cpd.enable" value="true" />
+                <target name="cpd" />
+                <target name="cpd-xml" />
+            </ant>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="check-cpd-result"
+            description="Fail if cpd result is not available.">
+        <attribute name="project.directory"
+            description="Directory of a project." />
+        <sequential>
+            <local name="reports.directory" />
+            <property name="reports.directory"
+                location="@{project.directory}/${reports.directory.name}" />
+
+            <echo
+                message="Check whether cpd result files are available in @{project.directory}" />
+            <check-files-are-available
+                    message="PMD's CPD result is not avaiable.">
+                <available file="${reports.directory}/cpd.txt" />
+                <available file="${reports.directory}/cpd.xml" />
+            </check-files-are-available>
+        </sequential>
+    </macrodef>
+
+    <target name="test-cpd" depends="-create-local-properties"
+            description="Test cpd targets.">
+        <set-build-scripts
+            application.project.directory="${sample.application.directory}" />
+
+        <execute-cpd-targets
+            project.directory="${sample.application.directory}" />
+        <check-cpd-result
+            project.directory="${sample.application.directory}" />
+
+        <execute-cpd-targets
+            project.directory="${sample.test.application.directory}" />
+        <check-cpd-result
+            project.directory="${sample.test.application.directory}" />
+    </target>
+
+    <target name="test-standard-test" depends="-create-local-properties"
+            description="Test test target with coverage.">
+        <set-build-scripts
+            application.project.directory="${sample.application.directory}" />
+
+        <local name="coverage.html.file" />
+        <property name="coverage.html.file"
+            location="${sample.test.application.bin.directory}/coverage.html" />
+
+        <delete file="${coverage.html.file}" failonerror="false"
+            taskname="clean artifact" />
+
+        <ant dir="${sample.test.application.directory}" inheritAll="false">
+            <property name="test.runner"
+                value="com.github.mikanbako.buildscriptextension.sample.SuccessfulTestRunner" />
+            <target name="uninstall" />
+            <target name="emma" />
+            <target name="debug" />
+            <target name="install" />
+            <target name="test" />
+        </ant>
+
+        <check-files-are-available
+                message="HTML of coverage is not avaiable.">
+            <available
+                file="${coverage.html.file}" />
+        </check-files-are-available>
+    </target>
+
+    <target name="test-extended-test-xml" depends="-create-local-properties"
+            description="Test test-xml target.">
+        <set-build-scripts
+            application.project.directory="${sample.application.directory}" />
+
+        <local name="sample.test.application.reports.directory" />
+        <property name="sample.test.application.reports.directory"
+            location="${sample.test.application.directory}/${reports.directory.name}" />
+
+        <local name="test.result.file" />
+        <property name="test.result.file"
+            location="${sample.test.application.reports.directory}/test_result.xml" />
+
+        <delete dir="${sample.test.application.reports.directory}"
+            failonerror="false" taskname="clean reports" />
+
+        <ant dir="${sample.test.application.directory}" inheritAll="false">
+            <property name="test.enable" value="true" />
+            <property name="test.runner"
+                value="com.github.mikanbako.buildscriptextension.sample.SuccessfulTestRunner" />
+            <target name="uninstall" />
+            <target name="debug" />
+            <target name="install" />
+            <target name="test-xml" />
+        </ant>
+
+        <check-files-are-available message="Test result is not available.">
+            <available file="${test.result.file}" />
+        </check-files-are-available>
+
+        <ant dir="${sample.test.application.directory}" inheritAll="false">
+            <property name="test.enable" value="true" />
+            <target name="verify-test-result" />
+        </ant>
+    </target>
+
+    <target name="test-extended-test-xml-when-failure"
+            depends="-create-local-properties"
+            description="Test test-xml target when the test fails.">
+        <set-build-scripts
+            application.project.directory="${sample.application.directory}" />
+
+        <local name="sample.test.application.reports.directory" />
+        <property name="sample.test.application.reports.directory"
+            location="${sample.test.application.directory}/${reports.directory.name}" />
+
+        <ant dir="${sample.test.application.directory}" inheritAll="false">
+            <property name="test.enable" value="true" />
+            <property name="test.runner"
+                value="com.github.mikanbako.buildscriptextension.sample.FailureTestRunner" />
+            <target name="uninstall" />
+            <target name="debug" />
+            <target name="install" />
+            <target name="test-xml" />
+        </ant>
+
+        <local name="test.result" />
+
+        <exec executable="ant" dir="${sample.test.application.directory}"
+                searchpath="true" resultproperty="test.result"
+                taskname="verifing failure test">
+            <arg line="-Dtest.enable=true" />
+            <arg line="verify-test-result" />
+        </exec>
+
+        <fail message="Test result is invalid. Because it is ${test.result}.">
+            <condition>
+                <not>
+                    <equals arg1="${test.result}" arg2="1" />
+                </not>
+            </condition>
+        </fail>
+    </target>
+
+    <target name="test-extended-test-xml-with-emma" depends="-create-local-properties"
+            description="Test test-xml target with emma.">
+        <set-build-scripts
+            application.project.directory="${sample.application.directory}" />
+
+        <local name="sample.test.application.reports.directory" />
+        <property name="sample.test.application.reports.directory"
+            location="${sample.test.application.directory}/${reports.directory.name}" />
+
+        <local name="coverage.result.html.file" />
+        <property name="coverage.result.html.file"
+            location="${sample.test.application.reports.directory}/coverage.html" />
+        <local name="coverage.result.xml.file" />
+        <property name="coverage.result.xml.file"
+            location="${sample.test.application.reports.directory}/coverage.xml" />
+
+        <delete dir="${sample.test.application.reports.directory}"
+            failonerror="false" taskname="clean reports" />
+
+        <ant dir="${sample.test.application.directory}" inheritAll="false">
+            <property name="test.enable" value="true" />
+            <property name="test.runner"
+                value="com.github.mikanbako.buildscriptextension.sample.SuccessfulTestRunner" />
+            <target name="uninstall" />
+            <target name="emma" />
+            <target name="debug" />
+            <target name="install" />
+            <target name="test-xml" />
+        </ant>
+
+        <check-files-are-available message="Test result is not available.">
+            <available file="${coverage.result.html.file}" />
+            <available file="${coverage.result.xml.file}" />
+        </check-files-are-available>
+    </target>
+</project>

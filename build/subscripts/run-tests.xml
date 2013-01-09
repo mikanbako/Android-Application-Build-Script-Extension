@@ -58,7 +58,7 @@
             description="Run script that tests for XML.">
         <element name="args" description="Arguments of the script." />
         <sequential>
-            <java classname="${jython.class}" failonerror="true">
+            <java classname="${jython.class}" failonerror="true" fork="true">
                 <classpath>
                     <pathelement path="${jython.jar}" />
                     <pathelement path="${ddmlib.jar}" />
