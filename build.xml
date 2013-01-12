@@ -15,5 +15,5 @@
         Import targets.
     -->
 
-    <import file="${test.projects.directory}/build_targets.xml" />
+    <import file="${test.projects.directory}/test_targets.xml" />
 </project>
