@@ -2,6 +2,17 @@
 <project name="android_build_extension_scripts">
 
     <!--
+        Define properties for release.
+    -->
+
+    <!-- Target revision of Android SDK about released scripts. -->
+    <property name="target.sdk.revision" value="20" />
+
+    <!-- File name representing this scripts for distribution. -->
+    <property name="distribution.archive.name"
+        value="android-application-build-script-extension-for-sdk-r${target.sdk.revision}.zip" />
+
+    <!--
         Define properties about top directories.
     -->
 
@@ -13,10 +24,6 @@
 
     <!-- Directory containing generated artifacts. -->
     <property name="out.artifacts.directory" location="out" />
-
-    <!-- File name representing this scripts for distribution. -->
-    <property name="distribution.archive.name"
-        value="android-application-build-script-extension.zip" />
 
     <!--
         Import targets.
