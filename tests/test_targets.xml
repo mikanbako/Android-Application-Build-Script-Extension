@@ -112,7 +112,7 @@
         Define clean target.
     -->
 
-    <target name="clean" description="Clean intermediate files by building.">
+    <target name="-clean">
         <clean-project
             application.project.directory="${sample.application.directory}"/>
         <clean-project
