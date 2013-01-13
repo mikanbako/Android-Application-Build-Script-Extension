@@ -11,9 +11,39 @@
     <!-- Directory containing test projects. -->
     <property name="test.projects.directory" location="tests"/>
 
+    <!-- Directory containing generated artifacts. -->
+    <property name="out.artifacts.directory" location="out" />
+
+    <!-- File name representing this scripts for distribution. -->
+    <property name="distribution.archive.name"
+        value="android-application-build-script-extension.zip" />
+
     <!--
         Import targets.
     -->
 
     <import file="${test.projects.directory}/test_targets.xml" />
+
+    <!--
+        Define targets.
+    -->
+
+    <target name="clean" depends="test-targets.clean">
+        <delete dir="${out.artifacts.directory}" />
+    </target>
+
+    <target name="distribution-archive" depends="clean"
+            description="Create distribution archive.">
+        <zip destfile="${out.artifacts.directory}/${distribution.archive.name}">
+            <fileset dir="${basedir}">
+                <include name="COPYING" />
+                <include name="README.*" />
+                <include name="build/**" />
+                <exclude name="build/externals/**" />
+            </fileset>
+            <dirset dir="${basedir}">
+                <include name="build/externals/findbugs" />
+            </dirset>
+        </zip>
+    </target>
 </project>
