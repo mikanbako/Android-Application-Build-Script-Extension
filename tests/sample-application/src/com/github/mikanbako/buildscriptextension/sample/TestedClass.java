@@ -13,7 +13,7 @@ public class TestedClass {
      * @param value2 Another value.
      * @return Added value.
      */
-    public int add(int value1, int value2) {
+    public static int add(int value1, int value2) {
         return value1 + value2;
     }
 }

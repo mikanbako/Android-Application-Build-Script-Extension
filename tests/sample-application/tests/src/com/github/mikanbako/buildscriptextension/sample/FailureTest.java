@@ -1,5 +1,6 @@
 package com.github.mikanbako.buildscriptextension.sample;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 /**
@@ -8,8 +9,11 @@ import junit.framework.TestCase;
 public class FailureTest extends TestCase {
     /**
      * Test for failure.
+     *
+     * This test must be failure.
      */
     public void testFailure() {
-        fail("This test is for failure.");
+        Assert.assertEquals("This test is for failure.",
+                1, TestedClass.add(1, 1));
     }
 }

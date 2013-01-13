@@ -1,5 +1,6 @@
 package com.github.mikanbako.buildscriptextension.sample;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 /**
@@ -8,8 +9,10 @@ import junit.framework.TestCase;
 public class SuccessfulTest extends TestCase {
     /**
      * Test for success.
+     *
+     * This test must be successful.
      */
     public void testSuccess() {
-        // No operation. This test is successful.
+        Assert.assertEquals(2, TestedClass.add(1, 1));
     }
 }
