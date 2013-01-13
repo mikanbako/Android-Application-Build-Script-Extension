@@ -35,7 +35,8 @@
         Define targets.
     -->
 
-    <target name="clean" depends="test-targets.clean">
+    <target name="clean" depends="test-targets.-clean"
+            description="Clean generated files.">
         <delete dir="${out.artifacts.directory}" />
     </target>
 
