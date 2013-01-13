@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!-- Targets for test. -->
-<project>
+<project name="test-targets">
 
     <!--
         Define properties.
