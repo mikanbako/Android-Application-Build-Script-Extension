@@ -494,7 +494,7 @@
         <fail message="Test result is invalid. Because it is ${test.result}.">
             <condition>
                 <not>
-                    <equals arg1="${test.result}" arg2="1" />
+                    <equals arg1="${test.result}" arg2="0" />
                 </not>
             </condition>
         </fail>
