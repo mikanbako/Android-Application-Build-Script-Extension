@@ -16,20 +16,25 @@ Android SDK Toolsから生成されるビルドスクリプト（build.xml）を
 
         ・テスト結果のレポートをJUnit XML形式で生成できます。
         ・生成されたJUnit XML形式のレポートから、テストの成功、失敗を判定できます。
-        ・コードカバレッジレポートをXML形式で生成できます。
 
 動作に必要なソフトウェア：
 
-    ・Android SDK Tools Revision 20以上 (http://developer.android.com/)
+    ・Android SDK Tools Revision 21.1以上 (http://developer.android.com/)
     ・Ant 1.8.0以上 (http://ant.apache.org/)
     ・静的コード解析用のターゲットを実行する場合は、その静的コード解析ツール。
 
-sdk_r16ブランチから削除された機能：
+削除された機能：
 
-    ・コードカバレッジのフィルタリング機能
-        ・Android SDK Tools Revision 17から、コードカバレッジのフィルタリング機能が
-          搭載されたため削除しました。emma.filterプロパティの設定で
-          フィルタリングできます。
+    ・sdk_r16ブランチから：
+        ・コードカバレッジのフィルタリング機能
+            ・Android SDK Tools Revision 17から、コードカバレッジのフィルタリング機能が
+            搭載されたため削除しました。emma.filterプロパティの設定で
+            フィルタリングできます。
+
+    ・sdk_r20ブランチから：
+        ・XML形式のカバレッジレポート生成機能
+            ・Android SDK Tools Revision 21から、XML形式のカバレッジレポートが
+            生成されるようになったため、削除しました。binディレクトリ配下に出力されます。
 
 初期設定：
 
@@ -184,8 +189,7 @@ PMD's Copy/Paste Detector (CPD)用の設定
            ・テスト結果を、テストプロジェクトの「reports/test_result.xml」として
              出力します。
 
-           ・emmaターゲットを同時に指定した場合、「reports/coverage.html」と
-             「reports/coverage.xml」としてカバレッジレポートを出力します。
+           ・emmaターゲットの後に指定した場合、カバレッジレポートを出力します。
 
         verify-test-result : JUnit XML形式のレポートをチェックし、もしテストに
                              失敗していれば実行中のビルドも失敗させます。
@@ -215,5 +219,4 @@ PMD's Copy/Paste Detector (CPD)用の設定
             ant emma debug install test-xml
                 テスト対象のアプリケーション、テストアプリケーションをビルドし、両者を
                 デバイスにインストールした後、テストを実行してテスト結果のレポートを
-                JUnit XML形式で生成します。またHTML形式とXML形式でカバレッジレポートを
-                生成します。
+                JUnit XML形式で生成します。またカバレッジレポートを生成します。

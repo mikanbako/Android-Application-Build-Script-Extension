@@ -494,7 +494,7 @@
         <fail message="Test result is invalid. Because it is ${test.result}.">
             <condition>
                 <not>
-                    <equals arg1="${test.result}" arg2="1" />
+                    <equals arg1="${test.result}" arg2="0" />
                 </not>
             </condition>
         </fail>
@@ -505,16 +505,12 @@
         <set-build-scripts
             application.project.directory="${sample.application.directory}" />
 
-        <local name="sample.test.application.reports.directory" />
-        <property name="sample.test.application.reports.directory"
-            location="${sample.test.application.directory}/${reports.directory.name}" />
-
         <local name="coverage.result.html.file" />
         <property name="coverage.result.html.file"
-            location="${sample.test.application.reports.directory}/coverage.html" />
+            location="${sample.test.application.bin.directory}/coverage.html" />
         <local name="coverage.result.xml.file" />
         <property name="coverage.result.xml.file"
-            location="${sample.test.application.reports.directory}/coverage.xml" />
+            location="${sample.test.application.bin.directory}/coverage.xml" />
 
         <delete dir="${sample.test.application.reports.directory}"
             failonerror="false" taskname="clean reports" />
