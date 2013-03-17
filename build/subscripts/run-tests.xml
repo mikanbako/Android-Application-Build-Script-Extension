@@ -17,14 +17,6 @@
 <project>
     <property name="test.result.xml.output"
             location="${reports.directory}/test_result.xml" />
-    <property name="coverage.log.output"
-            location="${reports.directory}/log_coverage.txt" />
-    <property name="coverage.output.directory"
-            location="${reports.directory}" />
-    <property name="coverage.xml.output"
-            location="${reports.directory}/coverage.xml" />
-    <property name="coverage.html.output"
-            location="${reports.directory}/coverage.html" />
 
     <property name="jython.class" value="org.python.util.jython" />
     <property name="jython.jar" location="${sdk.dir}/tools/lib/jython.jar" />
@@ -69,37 +61,54 @@
         </sequential>
     </macrodef>
 
-    <target name="-test-xml"
-            depends="-get-manifest-package">
-        <echo message="Test ${test.runner} on ${manifest.package}." />
-        <run-tests-for-xml>
-            <args>
-                <arg value="-a" />
-                <arg path="${adb}" />
-                <arg value="-b" />
-                <arg value="${adb.device.arg}" />
-                <arg value="-o" />
-                <arg value="${test.result.xml.output}" />
-                <arg value="${manifest.package}" />
-                <arg value="${test.runner}" />
-            </args>
-        </run-tests-for-xml>
-        <echo message="XML of test result is outputted to ${test.result.xml.output}" />
-    </target>
+    <macrodef name="run-tests-for-xml-without-coverage"
+            description="Run run-tests-for-xml without coverage.">
+        <sequential>
+            <echo message="Test ${test.runner} on ${project.app.package}." />
+            <run-tests-for-xml>
+                <args>
+                    <arg value="-a" />
+                    <arg path="${adb}" />
+                    <arg value="-b" />
+                    <arg value="${adb.device.arg}" />
+                    <arg value="-o" />
+                    <arg value="${test.result.xml.output}" />
+                    <arg value="${manifest.package}" />
+                    <arg value="${test.runner}" />
+                </args>
+            </run-tests-for-xml>
+        </sequential>
+    </macrodef>
 
-    <import file="${subscripts.directory}/run-tests-with-emma.xml" />
+    <macrodef name="run-tests-for-xml-with-coverage"
+            description="Run run-tests-for-xml with coverage">
+        <sequential>
+            <echo message="Test ${test.runner} on ${project.app.package}." />
+            <run-tests-for-xml>
+                <args>
+                    <arg value="-a" />
+                    <arg path="${adb}" />
+                    <arg value="-b" />
+                    <arg value="${adb.device.arg}" />
+                    <arg value="-o" />
+                    <arg value="${test.result.xml.output}" />
+                    <arg value="--coverage" />
+                    <arg value="${project.app.package}" />
+                    <arg value="--coverageFile" />
+                    <arg value="${emma.dump.file}" />
+                    <arg value="${test.runner}" />
+                </args>
+            </run-tests-for-xml>
+        </sequential>
+    </macrodef>
+
+    <import file="${subscripts.directory}/run-tests-from-sdk.xml" />
 
     <target name="test-xml"
             depends="-test-project-check, -make-test-result-directory"
             description="Run tests and generate JUnit XML report.">
-        <if condition="${emma.enabled}">
-            <then>
-                <antcall target="-test-coverage-xml" />
-            </then>
-            <else>
-                <antcall target="-test-xml" />
-            </else>
-        </if>
+        <antcall target="-test-xml-from-sdk" />
+        <echo message="XML of test result is outputted to ${test.result.xml.output}" />
     </target>
 
     <macrodef name="verify-test-xml-result"
