@@ -17,19 +17,24 @@ Features :
 
         * You can generate test result by JUnit XML format.
         * You can verify test result from generated JUnit XML report.
-        * You can generate coverage report by XML format.
 
 Required softwares :
 
-    * Android SDK Tools Revision 20 or above (http://developer.android.com/)
+    * Android SDK Tools Revision 21.1 or above (http://developer.android.com/)
     * Ant 1.8.0 or above (http://ant.apache.org/)
     * Static code analyzing tools if you run targets of static code analyze.
 
-Removed feature from sdk_r16 :
+Removed feature :
 
-    * Coverage filtering
-        * Because Android SDK Tools supports coverage filter from revision 17.
-          You can filter coverage result by "emma.filter" property.
+    * from sdk_r16
+        * Coverage filtering
+            * Because Android SDK Tools supports coverage filter from revision 17.
+              You can filter coverage result by "emma.filter" property.
+
+    * from sdk_r20
+        * XML coverage report
+            * Because Android SDK Tools supports XML coverage report
+              from revision 21. The report is generated to bin directory.
 
 First Setup :
 
@@ -184,9 +189,8 @@ Added Targets :
 
             * Test results report to "reports/test_result.xml" in test project.
 
-            * Coverage report to "reports/coverage.html" and
-              "reports/coverage.xml" in test project when you run text-xml
-              target with emma target.
+            * Coverage reports are generated when you run text-xml target after
+              emma target.
 
         verify-test-result : Check the JUnit XML report. And fail this build
                              if the test is failure.
@@ -215,4 +219,4 @@ Added Targets :
             ant emma debug install test-xml
                 Build test and tested application, install the both application,
                 run tests and generate report formatted by JUnit XML and
-                HTML / XML of coverage reports.
+                coverage reports.
