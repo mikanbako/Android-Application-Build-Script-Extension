@@ -19,7 +19,7 @@ Android SDK Toolsから生成されるビルドスクリプト（build.xml）を
 
 動作に必要なソフトウェア：
 
-    ・Android SDK Tools Revision 21.1以上 (http://developer.android.com/)
+    ・Android SDK Tools Revision 21.1 (http://developer.android.com/)
     ・Ant 1.8.0以上 (http://ant.apache.org/)
     ・静的コード解析用のターゲットを実行する場合は、その静的コード解析ツール。
 
