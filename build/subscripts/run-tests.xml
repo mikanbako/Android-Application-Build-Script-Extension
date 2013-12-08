@@ -19,7 +19,8 @@
             location="${reports.directory}/test_result.xml" />
 
     <property name="jython.class" value="org.python.util.jython" />
-    <property name="jython.jar" location="${sdk.dir}/tools/lib/jython.jar" />
+    <property name="jython.jar"
+        location="${sdk.dir}/tools/lib/jython-standalone-2.5.3.jar" />
     <property name="ddmlib.jar"
             value="${sdk.dir}/tools/lib/ddmlib.jar" />
 
